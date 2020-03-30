@@ -1,0 +1,15 @@
+XTerm.vt100.scrollBar: false
+xterm*selectToClipboard: true
+
+XTerm*VT100.cutNewLine: false
+XTerm*VT100.cutToBeginningOfLine: false
+XTerm*VT100.charClass: 33:48,35:48,37:48,42:48,45-47:48,64:48,95:48,126:48
+
+XTerm*faceName: PragmataPro
+xterm*faceSize: 14
+
+XTerm.VT100.translations: #override \
+Ctrl <Key> minus: smaller-vt-font() \n\
+Ctrl <Key> plus: larger-vt-font() \n
+
+XTerm.VT100.reverseVideo: true
