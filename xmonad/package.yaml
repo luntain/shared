@@ -1,0 +1,17 @@
+name:                xmonad-conf
+version:             0.1.0.0
+
+dependencies:
+  - base
+  - xmonad
+  - xmonad-contrib
+
+default-extensions:
+  NamedFieldPuns, RecordWildCards, TupleSections, LambdaCase, MultiWayIf,
+  MultiParamTypeClasses,
+  RankNTypes, ScopedTypeVariables, TypeApplications
+
+executable:
+    source-dirs: .
+    main: xmonad.hs
+

@@ -26,8 +26,11 @@
             ;(" \\(f>\\) "        #X1F862)
 
             ; those alternative arrows couldn't be substituted using prettify symbols
-            (" \\(<-\\) "        #X1F850)
-            (" \\(->\\) "        #X1F852)
+            ;(" \\(<-\\) "        #X1F850)
+            ;(" \\(->\\) "        #X1F852)
+
+            (" \\(<-\\) "        #XE8E0)
+            (" \\(->\\) "        #XE8E2)
 
             (" \\(::\\) "        #X2208)
             ;("\\(forall\\) "     #X2200)
@@ -43,4 +46,4 @@
 (add-hook 'prog-mode-hook
           #'add-pragmatapro-symbol-keywords)
 
-(set-frame-font "PragmataPro Liga 14" nil t)
+(set-frame-font "PragmataPro Mono 14" nil t)
