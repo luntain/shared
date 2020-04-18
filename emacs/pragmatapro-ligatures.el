@@ -1,6 +1,6 @@
 
 ;; load the official prettify symbols for pragmata pro (with some ligations commented out)
-(load "~/shared/pragmatapro-prettify-symbols-for-pp-v0.828.el")
+(load "~/shared/emacs/pragmatapro-prettify-symbols-for-pp-v0.828.el")
 
 (add-hook 'prog-mode-hook
           #'prettify-hook)
