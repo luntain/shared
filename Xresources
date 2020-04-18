@@ -22,3 +22,5 @@ Meta <KeyPress> /: dabbrev-expand() \n
 
 
 XTerm.VT100.reverseVideo: true
+
+XTerm.VT100.saveLines: 50000
