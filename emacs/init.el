@@ -381,9 +381,9 @@ point."
  :ensure t
  :config
  (setq lsp-haskell-process-path-hie "ghcide")
- ;; Comment/uncomment this line to see interactions between lsp client/server.
  (setq lsp-haskell-process-wrapper-function (lambda (argv) (append '("nice") argv)))
- (setq lsp-log-io t)
+ ;; Comment/uncomment this line to see interactions between lsp client/server.
+ ;(setq lsp-log-io t)
  ;; (define-key evil-normal-state-map "gd" 'intero-goto-definition)
  (define-key evil-normal-state-map "gn" 'flycheck-next-error)
  (define-key evil-normal-state-map "gp" 'flycheck-previous-error))
