@@ -61,17 +61,11 @@
  '(haskell-process-suggest-haskell-docs-imports t)
  '(haskell-process-suggest-remove-import-lines t)
  '(hyai-basic-offset 2)
- '(ido-cr+-max-items 50000)
- '(ido-default-buffer-method (quote selected-window))
- '(ido-default-file-method (quote selected-window))
- '(ido-enable-flex-matching t)
- '(ido-ubiquitous-max-items 50000)
- '(ido-use-virtual-buffers t)
  '(indent-tabs-mode nil)
  '(lsp-haskell-process-args-hie nil)
  '(package-selected-packages
    (quote
-    (lsp-haskell lsp-ui lsp-mode eglot smartparens ace-window hydra dumb-jump dracula-theme flycheck-vale projectile company-cabal hyai haskell-mode smex simp ido-vertical-mode ido-completing-read+ flx-ido fiplr f exec-path-from-shell evil-surround company-ghc company-flx coffee-mode ace-jump-mode ac-capf)))
+    (lsp-haskell lsp-ui lsp-mode smartparens hydra dumb-jump projectile hyai haskell-mode smex simp ido-vertical-mode ido-completing-read+ flx-ido evil-surround company-ghc company-flx coffee-mode ace-jump-mode)))
  '(projectile-enable-caching nil)
  '(reb-re-syntax (quote rx))
  '(recentf-auto-cleanup (quote never))
@@ -89,17 +83,33 @@
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-(setq ido-show-dot-for-dired nil)
-(setq ido-create-new-buffer 'always)
-(setq ido-use-filename-at-point nil)
-(setq ido-use-virtual-buffers t)
-(setq ido-everywhere t)
-(setq ido-enable-flex-matching t)
-(ido-mode 'both)
-(ido-ubiquitous-mode t)
-(ido-vertical-mode)
-(setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
+;(ido-ubiquitous-mode t) -- usepackage?
+(use-package ido-completing-read+
+ :ensure t
+ :init
+  (setq ido-cr+-max-items 50000)
+  (setq ido-default-buffer-method (quote selected-window))
+  (setq ido-default-file-method (quote selected-window))
+  (setq ido-enable-flex-matching t)
+  (setq ido-ubiquitous-max-items 50000)
+  (setq ido-use-virtual-buffers t)
+  (setq ido-show-dot-for-dired nil)
+  (setq ido-create-new-buffer 'always)
+  (setq ido-use-filename-at-point nil)
+  (setq ido-use-virtual-buffers t)
+  (setq ido-everywhere t)
+  (setq ido-enable-flex-matching t)
+  (ido-mode 'both)
+ :config
+  (ido-ubiquitous-mode 1)
+)
 
+(use-package smex :ensure t)
+
+(use-package ido-vertical-mode :ensure t
+ :config
+ (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
+)
 
 (use-package evil
   :init
@@ -300,14 +310,12 @@ point."
     (load "~/shared/emacs/pragmatapro-ligatures.el")
     (add-to-list 'default-frame-alist '(font . "PragmataPro Mono-14")))
 
-(require 'flycheck)
+(use-package flycheck :ensure t)
 
 ;;(require 'company-flx)
 ;;(company-flx-mode +1)
 
 (use-package flx-ido :ensure t)
-;(ido-mode 1)
-;(ido-everywhere 1)
 (flx-ido-mode 1)
 ;; disable ido faces to see flx highlights.
 (setq ido-enable-flex-matching t)
