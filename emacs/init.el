@@ -113,6 +113,8 @@
 
 (use-package evil
   :init
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t) ; evil-want-C-u-scroll needs to be set before 'evil is loaded
 
   ; The following snippet will make Evil treat an Emacs symbol as a word.
@@ -137,6 +139,15 @@
 
   :ensure t)
 
+;(use-package evil-easymotion
+   ;:ensure t
+   ;:config (evilem-default-keybindings "SPC"))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
 (use-package evil-surround
   :ensure t
