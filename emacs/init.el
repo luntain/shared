@@ -110,6 +110,7 @@
  :config
  (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 )
+(use-package yaml-mode :ensure t)
 
 (use-package evil
   :init
