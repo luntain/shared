@@ -1,0 +1,5 @@
+set -ex
+source $HOME/.bash_profile
+cd $HOME/shared/xmonad
+stack build
+ln -f -T $(stack exec -- which xmonad-conf) $1
