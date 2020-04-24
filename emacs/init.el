@@ -7,8 +7,8 @@
         ("gnu"       . "http://elpa.gnu.org/packages/")
         ))
 
-
-(package-initialize)
+(when (< emacs-major-version 27)
+  (package-initialize))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -21,8 +21,6 @@
 
 (use-package projectile
   :ensure t)
-
-(use-package hydra :ensure t)
 
 (use-package exec-path-from-shell :ensure t)
 
@@ -138,6 +136,8 @@
   (define-key evil-insert-state-map (kbd "C-o") 'evil-ret)
   (define-key evil-insert-state-map (kbd "C-k") 'smex)
 
+  (define-key evil-insert-state-map (kbd "C-o") 'evil-ret)
+  (define-key evil-insert-state-map (kbd "C-k") 'smex)
   :ensure t)
 
 ;(use-package evil-easymotion
@@ -157,6 +157,54 @@
 
 (evil-mode 1)
 
+(use-package hydra :ensure t
+ :config
+ (defhydra hydra-window (:color red
+                        :hint nil)
+  "
+ Split: _v_ert _x_:horz
+Delete: _o_nly  _da_ce  _dw_indow  _db_uffer  _df_rame
+  Move: _s_wap
+Frames: _f_rame new  _df_ delete
+  Misc: _m_ark _a_ce  _u_ndo  _r_edo"
+  ("h" windmove-left)
+  ("j" windmove-down)
+  ("k" windmove-up)
+  ("l" windmove-right)
+  ("H" hydra-move-splitter-left)
+  ("J" hydra-move-splitter-down)
+  ("K" hydra-move-splitter-up)
+  ("L" hydra-move-splitter-right)
+  ("|" (lambda ()
+         (interactive)
+         (split-window-right)
+         (windmove-right)))
+  ("_" (lambda ()
+         (interactive)
+         (split-window-below)
+         (windmove-down)))
+  ("v" split-window-right)
+  ("x" split-window-below)
+  ;("t" transpose-frame "'")
+  ;; winner-mode must be enabled
+  ("u" winner-undo)
+  ("r" winner-redo) ;;Fixme, not working?
+  ("o" delete-other-windows :exit t)
+  ("a" ace-window :exit t)
+  ("f" new-frame :exit t)
+  ("s" ace-swap-window)
+  ("da" ace-delete-window)
+  ("dw" delete-window)
+  ("db" kill-this-buffer)
+  ("df" delete-frame :exit t)
+  ("q" nil)
+  ;("i" ace-maximize-window "ace-one" :color blue)
+  ;("b" ido-switch-buffer "buf")
+  ("m" headlong-bookmark-jump))
+  (define-key evil-normal-state-map ",w" 'hydra-window/body)
+)
+
+
 (use-package dumb-jump
   :ensure t
   :config
@@ -175,7 +223,9 @@
 (use-package ace-window
   :ensure t
   :config
+  (define-key evil-normal-state-map (kbd "M-o") 'ace-window)
   (define-key evil-normal-state-map ",a" 'ace-window)
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   )
 
 (use-package smartparens
@@ -284,8 +334,19 @@ point."
    ;;((eq overriding-terminal-local-map evil-read-key-map) (keyboard-quit) (kbd ""))
    (t (kbd "C-g"))))
 
-(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-word-mode)
+(use-package ace-jump-mode :ensure t :config
+  (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-word-mode)
+  (define-key evil-normal-state-map (kbd "C-SPC") 'ace-jump-mode))
+
 (define-key evil-normal-state-map (kbd "C-f") 'universal-argument)
+
+(define-prefix-command 'profiler-map)
+(global-set-key (kbd "C-p") 'profiler-map)
+(define-key evil-normal-state-map (kbd "C-p") 'profiler-map)
+(define-key profiler-map (kbd "s") 'profiler-start)
+(define-key profiler-map (kbd "S") 'profiler-stop)
+(define-key profiler-map (kbd "r") 'profiler-report)
+(define-key profiler-map (kbd "R") 'profiler-reset)
 
 ;; The weird thing about this mapping is that it makes ESC to exit the minibuffer immediately
 ;; but c-[ needs to be pressed twice for the same effect. So in summary, it takes down the
@@ -343,6 +404,7 @@ point."
   (browse-url (format  "http://haskell.org/hoogle/?q=%s" (url-hexify-string query)))
   )
 
+
 ;; haskell yet another indentation
 ; (use-package hyai :ensure t
 ; :config (add-hook 'haskell-mode-hook #'hyai-mode))
@@ -366,9 +428,8 @@ point."
     ;(flycheck-mode)
     ;(turn-on-purescript-indentation)))
 
-(setq company-idle-delay 2)
-
 (company-tng-configure-default)
+(setq company-idle-delay 2)
 
 ; display full file path in the window's title
 (setq frame-title-format
@@ -389,14 +450,25 @@ point."
 ; tells it not to follow the symlink.
 (setq vc-follow-symlinks nil)
 
+; 100mb gc threshold, recommended by lsp-mode authors
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+(setq lsp-prefer-capf t)
 
 (use-package lsp-mode
   :ensure t
   :hook (haskell-mode . lsp)
-  :commands lsp)
+  :commands lsp
+  :config
+)
 (use-package lsp-ui
   :ensure t
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :init
+  (setq lsp-idle-delay 0.500)
+  :config
+  (setq lsp-ui-doc-enable nil)
+)
 (use-package lsp-haskell
  :ensure t
  :config
@@ -407,3 +479,9 @@ point."
  ;; (define-key evil-normal-state-map "gd" 'intero-goto-definition)
  (define-key evil-normal-state-map "gn" 'flycheck-next-error)
  (define-key evil-normal-state-map "gp" 'flycheck-previous-error))
+
+; no menu bar
+(menu-bar-mode -1)
+; no scroll bar
+(toggle-scroll-bar -1)
+(set-cursor-color "#ffffff")
