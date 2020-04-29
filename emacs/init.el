@@ -22,8 +22,6 @@
 (use-package projectile
   :ensure t)
 
-(use-package exec-path-from-shell :ensure t)
-
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
@@ -460,6 +458,7 @@ point."
   :hook (haskell-mode . lsp)
   :commands lsp
   :config
+  (setq lsp-use-native-json t)
 )
 (use-package lsp-ui
   :ensure t
@@ -484,4 +483,3 @@ point."
 (menu-bar-mode -1)
 ; no scroll bar
 (toggle-scroll-bar -1)
-(set-cursor-color "#ffffff")
