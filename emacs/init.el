@@ -58,7 +58,6 @@
  '(haskell-process-suggest-remove-import-lines t)
  '(hyai-basic-offset 2)
  '(indent-tabs-mode nil)
- '(lsp-haskell-process-args-hie nil)
  '(package-selected-packages
    (quote
     (lsp-haskell lsp-ui lsp-mode smartparens hydra dumb-jump projectile hyai haskell-mode smex simp ido-vertical-mode ido-completing-read+ flx-ido evil-surround company-ghc company-flx coffee-mode ace-jump-mode)))
@@ -478,6 +477,14 @@ point."
  ;; (define-key evil-normal-state-map "gd" 'intero-goto-definition)
  (define-key evil-normal-state-map "gn" 'flycheck-next-error)
  (define-key evil-normal-state-map "gp" 'flycheck-previous-error))
+
+(use-package reformatter :ensure t)
+(use-package ormolu
+  :ensure t
+ ; :hook (haskell-mode . ormolu-format-on-save-mode)
+ :bind
+ (:map haskell-mode-map
+   ("C-c r" . ormolu-format-buffer)))
 
 ; no menu bar
 (menu-bar-mode -1)
