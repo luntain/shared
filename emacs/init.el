@@ -61,7 +61,6 @@
  '(package-selected-packages
    (quote
     (lsp-haskell lsp-ui lsp-mode smartparens hydra dumb-jump projectile hyai haskell-mode smex simp ido-vertical-mode ido-completing-read+ flx-ido evil-surround company-ghc company-flx coffee-mode ace-jump-mode)))
- '(projectile-enable-caching nil)
  '(reb-re-syntax (quote rx))
  '(recentf-auto-cleanup (quote never))
  '(recentf-max-saved-items 500)
