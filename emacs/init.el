@@ -14,6 +14,16 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(setq
+   inhibit-startup-screen t
+   initial-scratch-message nil
+   sentence-end-double-space nil
+   ;; Prompts should go in the minibuffer, not in a GUI.
+   use-dialog-box nil ;
+   )
+
+(column-number-mode)
+
 (use-package hindent
   :init ; init - to execute before the package is loaded
   (setq hindent-extra-args '("--line-length" "120"))
@@ -76,6 +86,7 @@
  '(visible-bell t))
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+(setq require-final-newline t)
 
 ;(ido-ubiquitous-mode t) -- usepackage?
 (use-package ido-completing-read+
@@ -374,6 +385,7 @@ point."
 (setq make-backup-files nil)
 ;; don't crate #files#
 (setq auto-save-default nil)
+(setq create-lockfiles nil)
 
 (when (file-exists-p  "~/shared/emacs/pragmatapro-ligatures.el")
     (load "~/shared/emacs/pragmatapro-ligatures.el")
@@ -425,7 +437,26 @@ point."
     ;(turn-on-purescript-indentation)))
 
 (company-tng-configure-default)
-(setq company-idle-delay 2)
+
+
+(use-package company
+  :diminish
+  :bind (("C-." . #'company-complete))
+  :hook (prog-mode . company-mode)
+  :init
+  :custom
+  (company-dabbrev-downcase nil "Don't downcase returned candidates.")
+  (company-show-numbers t "Numbers are helpful.")
+  (company-tooltip-limit 20 "The more the merrier.")
+  (company-idle-delay 1 "Faster!")
+  (company-async-timeout 20 "Some requests can take a long time. That's fine.")
+  :config
+
+  ;; Use the numbers 0-9 to select company completion candidates
+  (let ((map company-active-map))
+    (mapc (lambda (x) (define-key map (format "%d" x)
+			  `(lambda () (interactive) (company-complete-number ,x))))
+	    (number-sequence 0 9))))
 
 ; display full file path in the window's title
 (setq frame-title-format
@@ -457,6 +488,11 @@ point."
   :commands lsp
   :config
   (setq lsp-use-native-json t)
+  :custom
+  (lsp-print-performance t)
+  ;(lsp-log-io t)
+  (lsp-diagnostics-modeline-scope :project)
+  (lsp-file-watch-threshold 5000)
 )
 (use-package lsp-ui
   :ensure t
@@ -489,3 +525,29 @@ point."
 (menu-bar-mode -1)
 ; no scroll bar
 (toggle-scroll-bar -1)
+
+(use-package expand-region
+  :ensure t
+  :bind (("C-c n" . er/expand-region)))
+
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode)
+  (which-key-setup-side-window-bottom)
+  :custom (which-key-idle-delay 2))
+
+(use-package magit
+  :ensure t
+  :diminish magit-auto-revert-mode
+  :diminish auto-revert-mode
+  :bind (("C-c g" . #'magit-status))
+  :config
+  (add-to-list 'magit-no-confirm 'stage-all-changes))
+
+(use-package yasnippet
+  :ensure t
+  :defer 3 ;; takes a while to load, so do it async
+  :diminish yas-minor-mode
+  :config (yas-global-mode)
+  :custom (yas-prompt-functions '(yas-completing-prompt)))
