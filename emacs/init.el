@@ -486,11 +486,13 @@ point."
   :ensure t
   :hook (haskell-mode . lsp)
   :commands lsp
+  :init
+  (setq lsp-keymap-prefix "s-l") ;; doubt if it works
   :config
   (setq lsp-use-native-json t)
   :custom
   (lsp-print-performance t)
-  ;(lsp-log-io t)
+  (lsp-log-io t)
   (lsp-diagnostics-modeline-scope :project)
   (lsp-file-watch-threshold 5000)
 )
@@ -498,8 +500,9 @@ point."
   :ensure t
   :commands lsp-ui-mode
   :init
-  (setq lsp-idle-delay 0.500)
+  (setq lsp-idle-delay 2)
   :config
+  (setq company-minimum-prefix-length 1)
   (setq lsp-ui-doc-enable nil)
 )
 (use-package lsp-haskell
@@ -551,3 +554,6 @@ point."
   :diminish yas-minor-mode
   :config (yas-global-mode)
   :custom (yas-prompt-functions '(yas-completing-prompt)))
+
+(if (fboundp 'json-serialize) (message "OK, json-serliaze is there") (message "dupa sraka, json-serialize is not there"))
+(if (fboundp 'json-parse-string) (message "OK, json-parse-string is there") (message "dupa sraka, json-parse-string is not there"))
