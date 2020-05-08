@@ -83,7 +83,6 @@
  '(save-place-file "~/.emacs.d/emacs-places")
  '(set-mark-command-repeat-pop t)
  '(show-paren-mode t)
- '(smex-save-file "~/.emacs.d/smex-items")
  '(split-height-threshold nil)
  '(tab-always-indent nil)
  '(tab-width 2)
@@ -93,8 +92,6 @@
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq require-final-newline t)
-
-(use-package smex :ensure t)
 
 (use-package yaml-mode :ensure t)
 
@@ -123,7 +120,6 @@
   (define-key evil-insert-state-map (kbd "C-l") 'evil-forward-char)
   (define-key evil-insert-state-map "\r" 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-o") 'evil-ret)
-  (define-key evil-insert-state-map (kbd "C-k") 'smex)
 
   :ensure t)
 
@@ -324,6 +320,10 @@ point."
 (use-package ace-jump-mode :ensure t :config
   (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-word-mode)
   (define-key evil-normal-state-map (kbd "C-SPC") 'ace-jump-mode))
+
+(use-package avy :ensure t :config
+  (define-key evil-normal-state-map (kbd "S-SPC") 'avy-goto-char-2)
+ )
 
 (define-key evil-normal-state-map (kbd "C-f") 'universal-argument)
 
@@ -534,11 +534,19 @@ point."
   :config (yas-global-mode)
   :custom (yas-prompt-functions '(yas-completing-prompt)))
 
+(use-package smex :ensure t
+  :init
+  (setq smex-save-file "~/.emacs.d/smex-items"))
+
 (use-package ivy :ensure t
   :init
   (setq ivy-use-virtual-buffers t)
   )
-(use-package counsel :ensure t)
+(use-package counsel :ensure t
+  :config
+  (define-key evil-normal-state-map (kbd "C-k") 'counsel-M-x)
+  (define-key evil-insert-state-map (kbd "C-k") 'counsel-M-x)
+)
 (use-package ivy-hydra :ensure t)
 (ivy-mode)
 (counsel-mode)
