@@ -36,6 +36,7 @@
   (put 'projectile-project-name 'safe-local-variable #'stringp)
   ; this goes with naming the project inside .dir-locals.el:
   ; ((nil . ((projectile-project-name . "GFS"))))
+  (setq projectile-completion-system 'ivy)
   )
 
 (when (memq window-system '(mac ns x))
@@ -287,7 +288,7 @@ Frames: _f_rame new  _df_ delete
 
 (global-set-key (kbd "C--") 'text-scale-decrease)
 (global-set-key (kbd "C-+") 'text-scale-increase)
-(;global-set-key (kbd "C-0") 'text-scale-adjust)
+(global-set-key (kbd "C-0") 'text-scale-adjust)
 
 ; remove this hook because it slows down opening files
 (remove-hook 'find-file-hook 'vc-find-file-hook)
@@ -541,6 +542,15 @@ point."
 (use-package ivy :ensure t
   :init
   (setq ivy-use-virtual-buffers t)
+  ; ivy--regex-plus is Ivy's default completion method:
+  ; space is turned into .*
+  ; ! causes inversion for following patterns
+  ; c-o opens a hydra menu
+  ; counsel
+  ;   describe
+  ;     function, var
+  ;   find-library
+  ;   ivy-push-view: c-c v, c-c V for pop
   )
 (use-package counsel :ensure t
   :config
