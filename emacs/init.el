@@ -30,7 +30,13 @@
   :ensure t)
 
 (use-package projectile
-  :ensure t)
+  :ensure t
+  :config
+  (setq projectile-enable-caching t)
+  (put 'projectile-project-name 'safe-local-variable #'stringp)
+  ; this goes with naming the project inside .dir-locals.el:
+  ; ((nil . ((projectile-project-name . "GFS"))))
+  )
 
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
@@ -70,7 +76,7 @@
  '(indent-tabs-mode nil)
  '(package-selected-packages
    (quote
-    (lsp-haskell lsp-ui lsp-mode smartparens hydra dumb-jump projectile hyai haskell-mode smex simp ido-vertical-mode ido-completing-read+ flx-ido evil-surround company-ghc company-flx coffee-mode ace-jump-mode)))
+    (lsp-haskell lsp-ui lsp-mode smartparens hydra dumb-jump projectile hyai haskell-mode smex simp ido-vertical-mode flx-ido evil-surround company-ghc company-flx coffee-mode ace-jump-mode)))
  '(reb-re-syntax (quote rx))
  '(recentf-auto-cleanup (quote never))
  '(recentf-max-saved-items 500)
@@ -88,33 +94,8 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq require-final-newline t)
 
-;(ido-ubiquitous-mode t) -- usepackage?
-(use-package ido-completing-read+
- :ensure t
- :init
-  (setq ido-cr+-max-items 50000)
-  (setq ido-default-buffer-method (quote selected-window))
-  (setq ido-default-file-method (quote selected-window))
-  (setq ido-enable-flex-matching t)
-  (setq ido-ubiquitous-max-items 50000)
-  (setq ido-use-virtual-buffers t)
-  (setq ido-show-dot-for-dired nil)
-  (setq ido-create-new-buffer 'always)
-  (setq ido-use-filename-at-point nil)
-  (setq ido-use-virtual-buffers t)
-  (setq ido-everywhere t)
-  (setq ido-enable-flex-matching t)
-  (ido-mode 'both)
- :config
-  (ido-ubiquitous-mode 1)
-)
-
 (use-package smex :ensure t)
 
-(use-package ido-vertical-mode :ensure t
- :config
- (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
-)
 (use-package yaml-mode :ensure t)
 
 (use-package evil
@@ -131,9 +112,10 @@
   (require 'evil-surround)
   (defalias #'forward-evil-word #'forward-evil-symbol)
   (define-key evil-normal-state-map "s" 'evil-surround-edit)
-  (define-key evil-normal-state-map ",e" 'ido-find-file)
-  (define-key evil-normal-state-map ",f" 'projectile-find-file)
-  (define-key evil-normal-state-map ",b" 'ido-switch-buffer)
+  (define-key evil-normal-state-map ",e" 'counsel-find-file)
+  (define-key evil-normal-state-map ",f" 'counsel-projectile-find-file) ;'projectile-find-file)
+  (define-key evil-normal-state-map ",p" 'counsel-projectile) ; switch file/buffer in project, or the project
+  (define-key evil-normal-state-map ",b" 'counsel-switch-buffer)
   (define-key evil-normal-state-map ",c" 'comment-dwim)
   (define-key evil-normal-state-map (kbd "C-l") 'delete-other-windows)
   (define-key evil-normal-state-map (kbd "gt") 'evil-goto-definition)
@@ -143,8 +125,6 @@
   (define-key evil-insert-state-map (kbd "C-o") 'evil-ret)
   (define-key evil-insert-state-map (kbd "C-k") 'smex)
 
-  (define-key evil-insert-state-map (kbd "C-o") 'evil-ret)
-  (define-key evil-insert-state-map (kbd "C-k") 'smex)
   :ensure t)
 
 ;(use-package evil-easymotion
@@ -311,7 +291,7 @@ Frames: _f_rame new  _df_ delete
 
 (global-set-key (kbd "C--") 'text-scale-decrease)
 (global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C-0") 'text-scale-adjust)
+(;global-set-key (kbd "C-0") 'text-scale-adjust)
 
 ; remove this hook because it slows down opening files
 (remove-hook 'find-file-hook 'vc-find-file-hook)
@@ -488,13 +468,11 @@ point."
   :commands lsp
   :init
   (setq lsp-keymap-prefix "s-l") ;; doubt if it works
-  :config
   (setq lsp-use-native-json t)
-  :custom
-  (lsp-print-performance t)
-  (lsp-log-io t)
-  (lsp-diagnostics-modeline-scope :project)
-  (lsp-file-watch-threshold 5000)
+  (setq lsp-print-performance t)
+  (setq lsp-log-io t)
+  (setq lsp-diagnostics-modeline-scope :project)
+  (setq lsp-file-watch-threshold 5000)
 )
 (use-package lsp-ui
   :ensure t
@@ -510,6 +488,7 @@ point."
  :config
  (setq lsp-haskell-process-path-hie "ghcide")
  (setq lsp-haskell-process-wrapper-function (lambda (argv) (append '("nice") argv)))
+ (setq lsp-haskell-process-args-hie nil)
  ;; Comment/uncomment this line to see interactions between lsp client/server.
  ;(setq lsp-log-io t)
  ;; (define-key evil-normal-state-map "gd" 'intero-goto-definition)
@@ -555,5 +534,16 @@ point."
   :config (yas-global-mode)
   :custom (yas-prompt-functions '(yas-completing-prompt)))
 
-(if (fboundp 'json-serialize) (message "OK, json-serliaze is there") (message "dupa sraka, json-serialize is not there"))
-(if (fboundp 'json-parse-string) (message "OK, json-parse-string is there") (message "dupa sraka, json-parse-string is not there"))
+(use-package ivy :ensure t
+  :init
+  (setq ivy-use-virtual-buffers t)
+  )
+(use-package counsel :ensure t)
+(use-package ivy-hydra :ensure t)
+(ivy-mode)
+(counsel-mode)
+(use-package counsel-projectile :ensure t
+  :init
+  (setq counsel-projectile-remove-current-project t)
+  (setq counsel-projectile-remove-current-buffer t)
+  )
