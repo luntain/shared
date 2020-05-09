@@ -49,11 +49,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(aw-dispatch-always t)
  '(completion-pcm-word-delimiters "-./:| ")
- '(custom-safe-themes
-   (quote
-    ("fe1c13d75398b1c8fd7fdd1241a55c286b86c3e4ce513c4292d01383de152cb7" default)))
+ '(custom-file "~/shared/emacs/init.el")
  '(ediff-window-setup-function (quote ediff-setup-windows-plain) t)
  '(electric-pair-mode t)
  '(evil-shift-width 2)
@@ -66,24 +63,25 @@
       (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip")))))
  '(flycheck-disabled-checkers (quote (haskell-ghc)))
  '(haskell-mode-hook
-   (quote
-    (turn-on-haskell-doc interactive-haskell-mode flycheck-mode)))
- '(haskell-notify-p t)
- '(haskell-process-auto-import-loaded-modules t)
- '(haskell-process-log t)
- '(haskell-process-suggest-haskell-docs-imports t)
- '(haskell-process-suggest-remove-import-lines t)
+   (quote (flycheck-mode)))
  '(hyai-basic-offset 2)
+ '(ido-default-buffer-method (quote selected-window))
+ '(ido-default-file-method (quote selected-window))
+ '(ido-use-virtual-buffers t)
  '(indent-tabs-mode nil)
  '(package-selected-packages
    (quote
-    (lsp-haskell lsp-ui lsp-mode smartparens hydra dumb-jump projectile hyai haskell-mode smex simp ido-vertical-mode flx-ido evil-surround company-ghc company-flx coffee-mode ace-jump-mode)))
+    (hydra dumb-jump hyai haskell-mode smex simp f ac-capf)))
  '(reb-re-syntax (quote rx))
  '(recentf-auto-cleanup (quote never))
  '(recentf-max-saved-items 500)
+ '(safe-local-variable-values
+   (quote
+    ((intero-stack-yaml . "/Users/luntain/p/mercury/stack.yaml"))))
  '(save-place-file "~/.emacs.d/emacs-places")
  '(set-mark-command-repeat-pop t)
  '(show-paren-mode t)
+ '(smex-save-file "~/.emacs.d/smex-items")
  '(split-height-threshold nil)
  '(tab-always-indent nil)
  '(tab-width 2)
@@ -123,10 +121,6 @@
   (define-key evil-insert-state-map (kbd "C-o") 'evil-ret)
 
   :ensure t)
-
-;(use-package evil-easymotion
-   ;:ensure t
-   ;:config (evilem-default-keybindings "SPC"))
 
 (use-package evil-collection
   :after evil
@@ -210,6 +204,7 @@ Frames: _f_rame new  _df_ delete
   (define-key evil-normal-state-map (kbd "M-o") 'ace-window)
   (define-key evil-normal-state-map ",a" 'ace-window)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  (setq aw-dispatch-always t)
   )
 
 (use-package smartparens
@@ -268,9 +263,6 @@ Frames: _f_rame new  _df_ delete
     ("g" nil))
    (define-key evil-normal-state-map ",s" 'hydra-smartparens/body)
 )
-
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "C-k") 'smex)
 
 ; (setq key-chord-two-key-delay 0.05)
 ;(require 'key-chord)
@@ -398,11 +390,6 @@ point."
 ; (use-package hyai :ensure t
 ; :config (add-hook 'haskell-mode-hook #'hyai-mode))
 
-(use-package company-cabal
-  :ensure t
-  :config
-    (add-to-list 'company-backends 'company-cabal))
-
 (setq mac-option-key-is-meta t)
 (setq mac-right-option-modifier nil)
 
@@ -417,9 +404,6 @@ point."
     ;(flycheck-mode)
     ;(turn-on-purescript-indentation)))
 
-(company-tng-configure-default)
-
-
 (use-package company
   :diminish
   :bind (("C-." . #'company-complete))
@@ -432,6 +416,7 @@ point."
   (company-idle-delay 1 "Faster!")
   (company-async-timeout 20 "Some requests can take a long time. That's fine.")
   :config
+  (company-tng-configure-default)
 
   ;; Use the numbers 0-9 to select company completion candidates
   (let ((map company-active-map))
@@ -479,10 +464,10 @@ point."
   :ensure t
   :commands lsp-ui-mode
   :init
-  (setq lsp-idle-delay 2)
+  ;(setq lsp-idle-delay 1)
+  (setq lsp-ui-doc-position (quote bottom))
   :config
   (setq company-minimum-prefix-length 1)
-  (setq lsp-ui-doc-enable nil)
 )
 (use-package lsp-haskell
  :ensure t
@@ -556,6 +541,8 @@ point."
   :config
   (define-key evil-normal-state-map (kbd "C-k") 'counsel-M-x)
   (define-key evil-insert-state-map (kbd "C-k") 'counsel-M-x)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-k") 'counsel-M-x)
 )
 (use-package ivy-hydra :ensure t)
 (ivy-mode)
