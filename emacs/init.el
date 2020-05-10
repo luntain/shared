@@ -62,8 +62,10 @@
      (files
       (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip")))))
  '(flycheck-disabled-checkers (quote (haskell-ghc)))
- '(haskell-mode-hook
-   (quote (flycheck-mode)))
+ '(grep-find-ignored-directories
+   (quote
+    (".git" ".stack-work")))
+ '(haskell-mode-hook (quote (flycheck-mode)))
  '(hyai-basic-offset 2)
  '(ido-default-buffer-method (quote selected-window))
  '(ido-default-file-method (quote selected-window))
