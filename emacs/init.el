@@ -457,8 +457,8 @@ point."
   :init
   (setq lsp-keymap-prefix "s-l") ;; doubt if it works
   (setq lsp-use-native-json t)
-  (setq lsp-print-performance t)
-  (setq lsp-log-io t)
+  (setq lsp-print-performance nil)
+  (setq lsp-log-io nil)
   (setq lsp-diagnostics-modeline-scope :project)
   (setq lsp-file-watch-threshold 5000)
 )
@@ -470,6 +470,7 @@ point."
   (setq lsp-ui-doc-position (quote bottom))
   :config
   (setq company-minimum-prefix-length 1)
+  (eldoc-mode -1) ;; superfluous
 )
 (use-package lsp-haskell
  :ensure t
