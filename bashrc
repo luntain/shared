@@ -1,7 +1,8 @@
 # If not running interactively, don't do anything
 #[[ "$-" != *i* ]] && return
 
-[ -r $HOME/.bash_profile ] && source $HOME/.bash_profile
+# in cygwin only .bash_profile is executed on startup
+#[ -r $HOME/.bash_profile ] && source $HOME/.bash_profile
 
 # Shell Options
 #
@@ -77,7 +78,4 @@ set -o vi
 shopt -s globstar
 
 export EDITOR=vim
-
-# host specific settings
-[[ -r $HOME/.bashrc-host ]] && source $HOME/.bashrc-host
 
