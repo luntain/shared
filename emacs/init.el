@@ -4,7 +4,7 @@
       '(;  ("melpa-stable" . "http://stable.melpa.org/packages/")
         ("melpa"     . "http://melpa.org/packages/")
         ; ("marmalade" . "http://marmalade-repo.org/packages/")
-        ("gnu"       . "http://elpa.gnu.org/packages/")
+        ;("gnu"       . "http://elpa.gnu.org/packages/")
         ))
 
 (when (< emacs-major-version 27)
@@ -38,6 +38,7 @@
   ; ((nil . ((projectile-project-name . "GFS"))))
   (setq projectile-completion-system 'ivy)
   )
+(projectile-mode)
 
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
@@ -51,7 +52,7 @@
  ;; If there is more than one, they won't work right.
  '(completion-pcm-word-delimiters "-./:| ")
  '(custom-file "~/shared/emacs/init.el")
- '(ediff-window-setup-function (quote ediff-setup-windows-plain) t)
+ '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(electric-pair-mode t)
  '(evil-shift-width 2)
  '(evil-symbol-word-search t)
@@ -62,9 +63,7 @@
      (files
       (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip")))))
  '(flycheck-disabled-checkers (quote (haskell-ghc)))
- '(grep-find-ignored-directories
-   (quote
-    (".git" ".stack-work")))
+ '(grep-find-ignored-directories (quote (".git" ".stack-work")))
  '(haskell-mode-hook (quote (flycheck-mode)))
  '(hyai-basic-offset 2)
  '(ido-default-buffer-method (quote selected-window))
@@ -73,7 +72,7 @@
  '(indent-tabs-mode nil)
  '(package-selected-packages
    (quote
-    (hydra dumb-jump hyai haskell-mode smex simp f ac-capf)))
+    (company yasnippet magit which-key expand-region ormolu reformatter lsp-haskell lsp-ui lsp-mode flx-ido flycheck ace-jump-mode smartparens ace-window evil-surround evil-collection evil yaml-mode counsel-projectile ivy-hydra counsel ivy hydra dumb-jump hyai haskell-mode smex simp f ac-capf)))
  '(reb-re-syntax (quote rx))
  '(recentf-auto-cleanup (quote never))
  '(recentf-max-saved-items 500)
@@ -113,7 +112,7 @@
   (define-key evil-normal-state-map ",e" 'counsel-find-file)
   (define-key evil-normal-state-map ",f" 'counsel-projectile-find-file) ;'projectile-find-file)
   (define-key evil-normal-state-map ",p" 'counsel-projectile) ; switch file/buffer in project, or the project
-  (define-key evil-normal-state-map ",b" 'counsel-switch-buffer)
+  (define-key evil-normal-state-map ",b" 'ivy-switch-buffer) ; counsel-swithc-buffer preloads the buffer as you type its name, this is however not so great if loading a buffer costs starting some backgroun processes
   (define-key evil-normal-state-map ",c" 'comment-dwim)
   (define-key evil-normal-state-map (kbd "C-l") 'delete-other-windows)
   (define-key evil-normal-state-map (kbd "gt") 'evil-goto-definition)
@@ -475,7 +474,7 @@ point."
 (use-package lsp-haskell
  :ensure t
  :config
- (setq lsp-haskell-process-path-hie "ghcide")
+ (setq lsp-haskell-process-path-hie "haskell-language-server")
  (setq lsp-haskell-process-wrapper-function (lambda (argv) (append '("nice") argv)))
  (setq lsp-haskell-process-args-hie nil)
  ;; Comment/uncomment this line to see interactions between lsp client/server.
