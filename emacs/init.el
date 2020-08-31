@@ -365,7 +365,13 @@ point."
     (load "~/shared/emacs/pragmatapro-ligatures.el")
     (add-to-list 'default-frame-alist '(font . "PragmataPro Mono-14")))
 
-(use-package flycheck :ensure t)
+(use-package flycheck :ensure t
+  :config
+  ; so that flycheck overrides eldoc
+  (setq eldoc-idle-delay 0.1
+        flycheck-display-errors-delay 0.2)
+  )
+
 
 ;;(require 'company-flx)
 ;;(company-flx-mode +1)
