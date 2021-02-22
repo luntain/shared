@@ -70,7 +70,7 @@
  '(ido-use-virtual-buffers t)
  '(indent-tabs-mode nil)
  '(package-selected-packages
-   '(vterm ivy-rich company yasnippet magit which-key expand-region ormolu reformatter lsp-haskell lsp-ui lsp-mode flx-ido flycheck ace-jump-mode smartparens ace-window evil-surround evil-collection evil yaml-mode counsel-projectile ivy-hydra counsel ivy hydra dumb-jump hyai haskell-mode smex simp f ac-capf))
+   '(undo-fu undo-tree vterm ivy-rich company yasnippet magit which-key expand-region ormolu reformatter lsp-haskell lsp-ui lsp-mode flx-ido flycheck ace-jump-mode smartparens ace-window evil-surround evil-collection evil yaml-mode counsel-projectile ivy-hydra counsel ivy hydra dumb-jump hyai haskell-mode smex simp f ac-capf))
  '(reb-re-syntax 'rx)
  '(recentf-auto-cleanup 'never)
  '(recentf-max-saved-items 500)
@@ -92,11 +92,14 @@
 
 (use-package yaml-mode :ensure t)
 
+(use-package undo-fu :ensure t)
+
 (use-package evil
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t) ; evil-want-C-u-scroll needs to be set before 'evil is loaded
+  (setq evil-undo-system 'undo-fu) ; can be set to the built-in 'undo-redo in Emacs 28, also: remove undo-fu use-package line
 
   ; The following snippet will make Evil treat an Emacs symbol as a word.
   ; This has the advantage that it changes depending on the language:
@@ -105,6 +108,8 @@
   :config
   (require 'evil-surround)
   (defalias #'forward-evil-word #'forward-evil-symbol)
+
+
   (define-key evil-normal-state-map "s" 'evil-surround-edit)
   (define-key evil-normal-state-map ",e" 'counsel-find-file)
   (define-key evil-normal-state-map ",f" 'counsel-projectile-find-file) ;'projectile-find-file)
