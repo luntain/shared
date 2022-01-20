@@ -80,10 +80,6 @@
  '(reb-re-syntax (quote rx))
  '(recentf-auto-cleanup (quote never))
  '(recentf-max-saved-items 500)
- '(safe-local-variable-values
-   (quote
-    ((intero-targets "financial:lib" "ibkr-api:lib" "interactive-brokers:lib" "myprelude:lib" "prices:lib" "ta:lib" "ta:exe:backtest-news" "ta:exe:download-analysts" "ta:exe:ta-exe" "utils:lib")
-     (intero-stack-yaml . "/Users/luntain/p/mercury/stack.yaml"))))
  '(save-place-file "~/.emacs.d/emacs-places")
  '(set-mark-command-repeat-pop t)
  '(show-paren-mode t)
@@ -100,11 +96,14 @@
 
 (use-package yaml-mode :ensure t)
 
+(use-package undo-fu :ensure t)
+
 (use-package evil
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t) ; evil-want-C-u-scroll needs to be set before 'evil is loaded
+  (setq evil-undo-system 'undo-fu) ; can be set to the built-in 'undo-redo in Emacs 28, also: remove undo-fu use-package line
 
   ; The following snippet will make Evil treat an Emacs symbol as a word.
   ; This has the advantage that it changes depending on the language:
@@ -113,6 +112,8 @@
   :config
   (require 'evil-surround)
   (defalias #'forward-evil-word #'forward-evil-symbol)
+
+
   (define-key evil-normal-state-map "s" 'evil-surround-edit)
   (define-key evil-normal-state-map ",e" 'counsel-find-file)
   (define-key evil-normal-state-map ",f" 'counsel-projectile-find-file) ;'projectile-find-file)
