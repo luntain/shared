@@ -40,8 +40,12 @@
   )
 (projectile-mode)
 
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize))
+)
 
 (add-to-list 'completion-ignored-extensions ".exe")
 
@@ -52,30 +56,34 @@
  ;; If there is more than one, they won't work right.
  '(completion-pcm-word-delimiters "-./:| ")
  '(custom-file "~/shared/emacs/init.el")
- '(ediff-window-setup-function 'ediff-setup-windows-plain)
+ '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(electric-pair-mode t)
  '(evil-shift-width 2)
  '(evil-symbol-word-search t)
  '(fiplr-ignored-globs
-   '((directories
+   (quote
+    ((directories
       (".git" ".svn" ".hg" ".bzr" ".stack-work" ".gitmodules"))
      (files
-      (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip"))))
- '(flycheck-disabled-checkers '(haskell-ghc))
- '(grep-find-ignored-directories '(".git" ".stack-work"))
- '(haskell-mode-hook '(flycheck-mode))
+      (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip")))))
+ '(flycheck-disabled-checkers (quote (haskell-ghc)))
+ '(grep-find-ignored-directories (quote (".git" ".stack-work")))
+ '(haskell-mode-hook (quote (flycheck-mode)))
  '(hyai-basic-offset 2)
- '(ido-default-buffer-method 'selected-window)
- '(ido-default-file-method 'selected-window)
+ '(ido-default-buffer-method (quote selected-window))
+ '(ido-default-file-method (quote selected-window))
  '(ido-use-virtual-buffers t)
  '(indent-tabs-mode nil)
  '(package-selected-packages
-   '(vterm ivy-rich company yasnippet magit which-key expand-region ormolu reformatter lsp-haskell lsp-ui lsp-mode flx-ido flycheck ace-jump-mode smartparens ace-window evil-surround evil-collection evil yaml-mode counsel-projectile ivy-hydra counsel ivy hydra dumb-jump hyai haskell-mode smex simp f ac-capf))
- '(reb-re-syntax 'rx)
- '(recentf-auto-cleanup 'never)
+   (quote
+    (exec-path-from-shell psc-ide purescript-mode vterm ivy-rich company yasnippet magit which-key expand-region ormolu reformatter lsp-haskell lsp-ui lsp-mode flx-ido flycheck ace-jump-mode smartparens ace-window evil-surround evil-collection evil yaml-mode counsel-projectile ivy-hydra counsel ivy hydra dumb-jump hyai haskell-mode smex simp f ac-capf)))
+ '(reb-re-syntax (quote rx))
+ '(recentf-auto-cleanup (quote never))
  '(recentf-max-saved-items 500)
  '(safe-local-variable-values
-   '((intero-stack-yaml . "/Users/luntain/p/mercury/stack.yaml")))
+   (quote
+    ((intero-targets "financial:lib" "ibkr-api:lib" "interactive-brokers:lib" "myprelude:lib" "prices:lib" "ta:lib" "ta:exe:backtest-news" "ta:exe:download-analysts" "ta:exe:ta-exe" "utils:lib")
+     (intero-stack-yaml . "/Users/luntain/p/mercury/stack.yaml"))))
  '(save-place-file "~/.emacs.d/emacs-places")
  '(set-mark-command-repeat-pop t)
  '(show-paren-mode t)
@@ -84,7 +92,7 @@
  '(tab-always-indent nil)
  '(tab-width 2)
  '(tool-bar-mode nil)
- '(uniquify-buffer-name-style 'post-forward nil (uniquify))
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
  '(visible-bell t))
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -397,16 +405,18 @@ point."
 (setq mac-option-key-is-meta t)
 (setq mac-right-option-modifier nil)
 
-;; (package-install 'purescript-mode)
-;;(use-package psc-ide
-;;  :ensure t)
-;(setq psc-ide-use-npm-bin t)
-;(add-hook 'purescript-mode-hook
-  ;(lambda ()
-    ;(psc-ide-mode)
-    ;(company-mode)
-    ;(flycheck-mode)
-    ;(turn-on-purescript-indentation)))
+(use-package purescript-mode :ensure t)
+(use-package psc-ide
+  :ensure t
+  :config
+  (setq psc-ide-use-npm-bin t)
+  (add-hook 'purescript-mode-hook
+    (lambda ()
+      (psc-ide-mode)
+      (company-mode)
+      (flycheck-mode)
+      (turn-on-purescript-indentation)))
+)
 
 (use-package company
   :diminish
