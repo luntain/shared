@@ -126,6 +126,7 @@
   (define-key evil-insert-state-map (kbd "C-l") 'evil-forward-char)
   (define-key evil-insert-state-map "\r" 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-o") 'evil-ret)
+  (define-key evil-visual-state-map (kbd "i") 'lsp-extend-selection)
 
   :ensure t)
 
