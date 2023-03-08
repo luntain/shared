@@ -65,9 +65,10 @@
       (".git" ".svn" ".hg" ".bzr" ".stack-work" ".gitmodules"))
      (files
       (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip"))))
- '(flycheck-disabled-checkers '(haskell-ghc))
- '(grep-find-ignored-directories '(".git" ".stack-work"))
  '(haskell-mode-hook '(flycheck-mode))
+ '(flycheck-disabled-checkers (quote (haskell-ghc)))
+ '(grep-find-ignored-directories (quote (".git" ".stack-work")))
+ '(haskell-align-imports-pad-after-name t)
  '(hyai-basic-offset 2)
  '(ido-default-buffer-method 'selected-window)
  '(ido-default-file-method 'selected-window)
@@ -76,11 +77,13 @@
  '(lsp-haskell-plugin-import-lens-code-lens-on nil)
  '(lsp-haskell-plugin-refine-imports-global-on nil)
  '(package-selected-packages
-   '(highlight2clipboard coffee-mode undo-fu exec-path-from-shell psc-ide purescript-mode vterm ivy-rich company yasnippet magit which-key expand-region ormolu reformatter lsp-haskell lsp-ui lsp-mode flx-ido flycheck ace-jump-mode smartparens ace-window evil-surround evil-collection evil yaml-mode counsel-projectile ivy-hydra counsel ivy hydra dumb-jump hyai haskell-mode smex simp f ac-capf))
+   '(exec-path-from-shell lsp-mode flx-ido ace-jump-mode evil-surround yaml-mode counsel-projectile counsel ivy hydra hyai haskell-mode smex simp f ac-capf))
  '(projectile-globally-ignored-directories
    '("^\\.idea$" "^\\.vscode$" "^\\.ensime_cache$" "^\\.eunit$" "^\\.git$" "^\\.hg$" "^\\.fslckout$" "^_FOSSIL_$" "^\\.bzr$" "^_darcs$" "^\\.pijul$" "^\\.tox$" "^\\.svn$" "^\\.stack-work$" "^\\.ccls-cache$" "^\\.cache$" "^\\.clangd$" "^\\.stack-work"))
  '(reb-re-syntax 'rx)
+ '(projectile-max-file-buffer-count 200)
  '(recentf-auto-cleanup 'never)
+'(projectile-use-git-grep t)
  '(recentf-max-saved-items 500)
  '(save-place-file "~/.emacs.d/emacs-places")
  '(set-mark-command-repeat-pop t)
@@ -120,7 +123,8 @@
   (define-key evil-normal-state-map ",e" 'counsel-find-file)
   (define-key evil-normal-state-map ",f" 'counsel-projectile-find-file) ;'projectile-find-file)
   (define-key evil-normal-state-map ",p" 'counsel-projectile-switch-project)
-  (define-key evil-normal-state-map ",b" 'ivy-switch-buffer) ; counsel-swithc-buffer preloads the buffer as you type its name, this is however not so great if loading a buffer costs starting some backgroun processes
+  (define-key evil-normal-state-map ",b" 'ivy-switch-buffer) ; counsel-switch-buffer preloads the buffer as you type its name, this is however not so great if loading a buffer costs starting some backgroun processes
+  (define-key evil-normal-state-map ",v" 'counsel-projectile-switch-to-buffer)
   (define-key evil-normal-state-map ",c" 'comment-dwim)
   (define-key evil-normal-state-map (kbd "C-l") 'delete-other-windows)
   (define-key evil-normal-state-map (kbd "gt") 'evil-goto-definition)
