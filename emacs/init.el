@@ -478,7 +478,7 @@ point."
 
 (use-package lsp-mode :straight t
   :ensure t
-  :hook (haskell-mode . lsp)
+  ;:hook (haskell-mode . lsp)
   :commands lsp
   :init
   (setq lsp-keymap-prefix "s-l") ;; doubt if it works
