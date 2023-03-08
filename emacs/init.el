@@ -56,29 +56,31 @@
  ;; If there is more than one, they won't work right.
  '(completion-pcm-word-delimiters "-./:| ")
  '(custom-file "~/shared/emacs/init.el")
- '(ediff-window-setup-function (quote ediff-setup-windows-plain))
+ '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(electric-pair-mode t)
  '(evil-shift-width 2)
  '(evil-symbol-word-search t)
  '(fiplr-ignored-globs
-   (quote
-    ((directories
+   '((directories
       (".git" ".svn" ".hg" ".bzr" ".stack-work" ".gitmodules"))
      (files
-      (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip")))))
- '(flycheck-disabled-checkers (quote (haskell-ghc)))
- '(grep-find-ignored-directories (quote (".git" ".stack-work")))
- '(haskell-mode-hook (quote (flycheck-mode)))
+      (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip"))))
+ '(flycheck-disabled-checkers '(haskell-ghc))
+ '(grep-find-ignored-directories '(".git" ".stack-work"))
+ '(haskell-mode-hook '(flycheck-mode))
  '(hyai-basic-offset 2)
- '(ido-default-buffer-method (quote selected-window))
- '(ido-default-file-method (quote selected-window))
+ '(ido-default-buffer-method 'selected-window)
+ '(ido-default-file-method 'selected-window)
  '(ido-use-virtual-buffers t)
  '(indent-tabs-mode nil)
+ '(lsp-haskell-plugin-import-lens-code-lens-on nil)
+ '(lsp-haskell-plugin-refine-imports-global-on nil)
  '(package-selected-packages
-   (quote
-    (exec-path-from-shell psc-ide purescript-mode vterm ivy-rich company yasnippet magit which-key expand-region ormolu reformatter lsp-haskell lsp-ui lsp-mode flx-ido flycheck ace-jump-mode smartparens ace-window evil-surround evil-collection evil yaml-mode counsel-projectile ivy-hydra counsel ivy hydra dumb-jump hyai haskell-mode smex simp f ac-capf)))
- '(reb-re-syntax (quote rx))
- '(recentf-auto-cleanup (quote never))
+   '(highlight2clipboard coffee-mode undo-fu exec-path-from-shell psc-ide purescript-mode vterm ivy-rich company yasnippet magit which-key expand-region ormolu reformatter lsp-haskell lsp-ui lsp-mode flx-ido flycheck ace-jump-mode smartparens ace-window evil-surround evil-collection evil yaml-mode counsel-projectile ivy-hydra counsel ivy hydra dumb-jump hyai haskell-mode smex simp f ac-capf))
+ '(projectile-globally-ignored-directories
+   '("^\\.idea$" "^\\.vscode$" "^\\.ensime_cache$" "^\\.eunit$" "^\\.git$" "^\\.hg$" "^\\.fslckout$" "^_FOSSIL_$" "^\\.bzr$" "^_darcs$" "^\\.pijul$" "^\\.tox$" "^\\.svn$" "^\\.stack-work$" "^\\.ccls-cache$" "^\\.cache$" "^\\.clangd$" "^\\.stack-work"))
+ '(reb-re-syntax 'rx)
+ '(recentf-auto-cleanup 'never)
  '(recentf-max-saved-items 500)
  '(save-place-file "~/.emacs.d/emacs-places")
  '(set-mark-command-repeat-pop t)
@@ -88,7 +90,7 @@
  '(tab-always-indent nil)
  '(tab-width 2)
  '(tool-bar-mode nil)
- '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
+ '(uniquify-buffer-name-style 'post-forward nil (uniquify))
  '(visible-bell t))
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -357,7 +359,7 @@ point."
  '(flyspell-incorrect ((t (:underline t))))
  '(help-argument-name ((t (:background "gray25"))))
  '(mouse ((t (:background "purple"))))
- '(whitespace-trailing ((t (:background "pink" :weight bold))) t))
+ '(whitespace-trailing ((t (:background "pink" :weight bold)))))
 
 
 (show-paren-mode 1)
@@ -544,6 +546,12 @@ point."
 (use-package ivy :ensure t
   :init
   (setq ivy-use-virtual-buffers t)
+
+  ; This might be a gotcha once I forget about it, but I almost never
+  ; want to switch to those buffers, and they seem to be always preferred,
+  ; since they are often accessed
+  (setq ivy-ignore-buffers (quote ("*lsp-haskell*" "*lsp-haskell::stderr*")))
+
   ; ivy--regex-plus is Ivy's default completion method:
   ; space is turned into .*
   ; ! causes inversion for following patterns
