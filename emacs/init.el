@@ -1,4 +1,3 @@
-(require 'package)
 
 (setq package-archives
       '(;  ("melpa-stable" . "http://stable.melpa.org/packages/")
@@ -7,12 +6,21 @@
         ;("gnu"       . "http://elpa.gnu.org/packages/")
         ))
 
-(when (< emacs-major-version 27)
-  (package-initialize))
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(straight-use-package 'use-package)
+
 
 (setq
    inhibit-startup-screen t
@@ -24,12 +32,12 @@
 
 (column-number-mode)
 
-(use-package hindent
+(use-package hindent :straight t
   :init ; init - to execute before the package is loaded
   (setq hindent-extra-args '("--line-length" "120"))
   :ensure t)
 
-(use-package projectile
+(use-package projectile :straight t
   :ensure t
   :config
   (setq projectile-enable-caching t)
@@ -40,7 +48,7 @@
   )
 (projectile-mode)
 
-(use-package exec-path-from-shell
+(use-package exec-path-from-shell :straight t
   :ensure t
   :config
   (when (memq window-system '(mac ns x))
@@ -76,8 +84,6 @@
  '(indent-tabs-mode nil)
  '(lsp-haskell-plugin-import-lens-code-lens-on nil)
  '(lsp-haskell-plugin-refine-imports-global-on nil)
- '(package-selected-packages
-   '(exec-path-from-shell lsp-mode flx-ido ace-jump-mode evil-surround yaml-mode counsel-projectile counsel ivy hydra hyai haskell-mode smex simp f ac-capf))
  '(projectile-globally-ignored-directories
    '("^\\.idea$" "^\\.vscode$" "^\\.ensime_cache$" "^\\.eunit$" "^\\.git$" "^\\.hg$" "^\\.fslckout$" "^_FOSSIL_$" "^\\.bzr$" "^_darcs$" "^\\.pijul$" "^\\.tox$" "^\\.svn$" "^\\.stack-work$" "^\\.ccls-cache$" "^\\.cache$" "^\\.clangd$" "^\\.stack-work"))
  '(reb-re-syntax 'rx)
@@ -99,16 +105,16 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq require-final-newline t)
 
-(use-package yaml-mode :ensure t)
+(use-package yaml-mode :straight t :ensure t)
 
-(use-package undo-fu :ensure t)
+(use-package undo-fu :straight t :ensure t)
 
-(use-package evil
+(use-package evil :straight t
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t) ; evil-want-C-u-scroll needs to be set before 'evil is loaded
-  (setq evil-undo-system 'undo-fu) ; can be set to the built-in 'undo-redo in Emacs 28, also: remove undo-fu use-package line
+  (setq evil-undo-system 'undo-fu) ; can be set to the built-in 'undo-redo in Emacs 28, also: remove undo-fu use-package line :straight t
 
   ; The following snippet will make Evil treat an Emacs symbol as a word.
   ; This has the advantage that it changes depending on the language:
@@ -136,20 +142,20 @@
 
   :ensure t)
 
-(use-package evil-collection
+(use-package evil-collection :straight t
   :after evil
   :ensure t
   :config
   (evil-collection-init))
 
-(use-package evil-surround
+(use-package evil-surround :straight t
   :ensure t
   :config
   (global-evil-surround-mode 1))
 
 (evil-mode 1)
 
-(use-package hydra :ensure t
+(use-package hydra :straight t :ensure t
  :config
  (defhydra hydra-window (:color red
                         :hint nil)
@@ -197,7 +203,7 @@ Frames: _f_rame new  _df_ delete
 )
 
 
-(use-package dumb-jump
+(use-package dumb-jump :straight t
   :ensure t
   :config
   (defhydra dumb-jump-hydra (:color red :columns 3)
@@ -212,7 +218,7 @@ Frames: _f_rame new  _df_ delete
    (define-key evil-normal-state-map ",d" 'dumb-jump-hydra/body)
   )
 
-(use-package ace-window
+(use-package ace-window :straight t
   :ensure t
   :config
   (define-key evil-normal-state-map (kbd "M-o") 'ace-window)
@@ -221,7 +227,7 @@ Frames: _f_rame new  _df_ delete
   (setq aw-dispatch-always t)
   )
 
-(use-package smartparens
+(use-package smartparens :straight t
   :ensure t
   :config
   (defhydra hydra-smartparens (:hint nil)
@@ -324,11 +330,11 @@ point."
    ;;((eq overriding-terminal-local-map evil-read-key-map) (keyboard-quit) (kbd ""))
    (t (kbd "C-g"))))
 
-(use-package ace-jump-mode :ensure t :config
+(use-package ace-jump-mode :straight t :ensure t :config
   (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-word-mode)
   (define-key evil-normal-state-map (kbd "C-SPC") 'ace-jump-mode))
 
-(use-package avy :ensure t :config
+(use-package avy :straight t :ensure t :config
   (define-key evil-normal-state-map (kbd "S-SPC") 'avy-goto-char-2)
  )
 
@@ -378,7 +384,7 @@ point."
     (load "~/shared/emacs/pragmatapro-ligatures.el")
     (add-to-list 'default-frame-alist '(font . "PragmataPro Mono-14")))
 
-(use-package flycheck :ensure t
+(use-package flycheck :straight t :ensure t
   :config
   ; so that flycheck overrides eldoc
   (setq eldoc-idle-delay 0.1
@@ -389,7 +395,7 @@ point."
 ;;(require 'company-flx)
 ;;(company-flx-mode +1)
 
-(use-package flx-ido :ensure t)
+(use-package flx-ido :straight t :ensure t)
 (flx-ido-mode 1)
 ;; disable ido faces to see flx highlights.
 (setq ido-enable-flex-matching t)
@@ -407,26 +413,26 @@ point."
 
 
 ;; haskell yet another indentation
-; (use-package hyai :ensure t
+; (use-package hyai :straight t :ensure t
 ; :config (add-hook 'haskell-mode-hook #'hyai-mode))
 
 (setq mac-option-key-is-meta t)
 (setq mac-right-option-modifier nil)
 
-(use-package purescript-mode :ensure t)
-(use-package psc-ide
-  :ensure t
-  :config
-  (setq psc-ide-use-npm-bin t)
-  (add-hook 'purescript-mode-hook
-    (lambda ()
-      (psc-ide-mode)
-      (company-mode)
-      (flycheck-mode)
-      (turn-on-purescript-indentation)))
-)
+;(use-package purescript-mode :straight t :ensure t)
+;(use-package psc-ide :straight t
+;  :ensure t
+;  :config
+;  (setq psc-ide-use-npm-bin t)
+;  (add-hook 'purescript-mode-hook
+;    (lambda ()
+;      (psc-ide-mode)
+;      (company-mode)
+;      (flycheck-mode)
+;      (turn-on-purescript-indentation)))
+;)
 
-(use-package company
+(use-package company :straight t
   :diminish
   :bind (("C-." . #'company-complete))
   :hook (prog-mode . company-mode)
@@ -470,7 +476,7 @@ point."
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 (setq lsp-prefer-capf t)
 
-(use-package lsp-mode
+(use-package lsp-mode :straight t
   :ensure t
   :hook (haskell-mode . lsp)
   :commands lsp
@@ -482,7 +488,7 @@ point."
   (setq lsp-diagnostics-modeline-scope :project)
   (setq lsp-file-watch-threshold 5000)
 )
-(use-package lsp-ui
+(use-package lsp-ui :straight t
   :ensure t
   :commands lsp-ui-mode
   :init
@@ -492,7 +498,7 @@ point."
   (setq company-minimum-prefix-length 1)
   (eldoc-mode -1) ;; superfluous
 )
-(use-package lsp-haskell
+(use-package lsp-haskell :straight t
  :ensure t
  :config
  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
@@ -504,8 +510,8 @@ point."
  (define-key evil-normal-state-map "gn" 'flycheck-next-error)
  (define-key evil-normal-state-map "gp" 'flycheck-previous-error))
 
-(use-package reformatter :ensure t)
-(use-package ormolu
+(use-package reformatter :straight t :ensure t)
+(use-package ormolu :straight t
   :ensure t
  ; :hook (haskell-mode . ormolu-format-on-save-mode)
  :bind
@@ -517,18 +523,18 @@ point."
 ; no scroll bar
 (toggle-scroll-bar -1)
 
-(use-package expand-region
+(use-package expand-region :straight t
   :ensure t
   :bind (("C-c n" . er/expand-region)))
 
-(use-package which-key
+(use-package which-key :straight t
   :ensure t
   :config
   (which-key-mode)
   (which-key-setup-side-window-bottom)
   :custom (which-key-idle-delay 2))
 
-(use-package magit
+(use-package magit :straight t
   :ensure t
   :diminish magit-auto-revert-mode
   :diminish auto-revert-mode
@@ -536,18 +542,18 @@ point."
   :config
   (add-to-list 'magit-no-confirm 'stage-all-changes))
 
-(use-package yasnippet
+(use-package yasnippet :straight t
   :ensure t
   :defer 3 ;; takes a while to load, so do it async
   :diminish yas-minor-mode
   :config (yas-global-mode)
   :custom (yas-prompt-functions '(yas-completing-prompt)))
 
-(use-package smex :ensure t
+(use-package smex :straight t :ensure t
   :init
   (setq smex-save-file "~/.emacs.d/smex-items"))
 
-(use-package ivy :ensure t
+(use-package ivy :straight t :ensure t
   :init
   (setq ivy-use-virtual-buffers t)
 
@@ -566,23 +572,23 @@ point."
   ;   find-library
   ;   ivy-push-view: c-c v, c-c V for pop
   )
-(use-package counsel :ensure t
+(use-package counsel :straight t :ensure t
   :config
   (define-key evil-normal-state-map (kbd "C-k") 'counsel-M-x)
   (define-key evil-insert-state-map (kbd "C-k") 'counsel-M-x)
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-k") 'counsel-M-x)
 )
-(use-package ivy-hydra :ensure t)
+(use-package ivy-hydra :straight t :ensure t)
 (ivy-mode)
 (counsel-mode)
-(use-package counsel-projectile :ensure t
+(use-package counsel-projectile :straight t :ensure t
   :init
   (setq counsel-projectile-remove-current-project t)
   (setq counsel-projectile-remove-current-buffer t)
   )
 
-(use-package ivy-rich :ensure t
+(use-package ivy-rich :straight t :ensure t
   :config
   (ivy-rich-mode 1)
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
