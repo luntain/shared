@@ -52,30 +52,36 @@
  ;; If there is more than one, they won't work right.
  '(completion-pcm-word-delimiters "-./:| ")
  '(custom-file "~/shared/emacs/init.el")
- '(ediff-window-setup-function 'ediff-setup-windows-plain)
+ '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(electric-pair-mode t)
  '(evil-shift-width 2)
  '(evil-symbol-word-search t)
  '(fiplr-ignored-globs
-   '((directories
+   (quote
+    ((directories
       (".git" ".svn" ".hg" ".bzr" ".stack-work" ".gitmodules"))
      (files
-      (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip"))))
- '(flycheck-disabled-checkers '(haskell-ghc))
- '(grep-find-ignored-directories '(".git" ".stack-work"))
- '(haskell-mode-hook '(flycheck-mode))
+      (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip")))))
+ '(flycheck-disabled-checkers (quote (haskell-ghc)))
+ '(grep-find-ignored-directories (quote (".git" ".stack-work")))
+ '(haskell-align-imports-pad-after-name t)
+ '(haskell-mode-hook (quote (flycheck-mode)))
  '(hyai-basic-offset 2)
- '(ido-default-buffer-method 'selected-window)
- '(ido-default-file-method 'selected-window)
+ '(ido-default-buffer-method (quote selected-window))
+ '(ido-default-file-method (quote selected-window))
  '(ido-use-virtual-buffers t)
  '(indent-tabs-mode nil)
  '(package-selected-packages
-   '(vterm ivy-rich company yasnippet magit which-key expand-region ormolu reformatter lsp-haskell lsp-ui lsp-mode flx-ido flycheck ace-jump-mode smartparens ace-window evil-surround evil-collection evil yaml-mode counsel-projectile ivy-hydra counsel ivy hydra dumb-jump hyai haskell-mode smex simp f ac-capf))
- '(reb-re-syntax 'rx)
- '(recentf-auto-cleanup 'never)
+   (quote
+    (vterm ivy-rich company yasnippet magit which-key expand-region ormolu reformatter lsp-haskell lsp-ui lsp-mode flx-ido flycheck ace-jump-mode smartparens ace-window evil-surround evil-collection evil yaml-mode counsel-projectile ivy-hydra counsel ivy hydra dumb-jump hyai haskell-mode smex simp f ac-capf)))
+ '(projectile-max-file-buffer-count 200)
+ '(projectile-use-git-grep t)
+ '(reb-re-syntax (quote rx))
+ '(recentf-auto-cleanup (quote never))
  '(recentf-max-saved-items 500)
  '(safe-local-variable-values
-   '((intero-stack-yaml . "/Users/luntain/p/mercury/stack.yaml")))
+   (quote
+    ((intero-stack-yaml . "/Users/luntain/p/mercury/stack.yaml"))))
  '(save-place-file "~/.emacs.d/emacs-places")
  '(set-mark-command-repeat-pop t)
  '(show-paren-mode t)
@@ -84,7 +90,7 @@
  '(tab-always-indent nil)
  '(tab-width 2)
  '(tool-bar-mode nil)
- '(uniquify-buffer-name-style 'post-forward nil (uniquify))
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
  '(visible-bell t))
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -109,7 +115,8 @@
   (define-key evil-normal-state-map ",e" 'counsel-find-file)
   (define-key evil-normal-state-map ",f" 'counsel-projectile-find-file) ;'projectile-find-file)
   (define-key evil-normal-state-map ",p" 'counsel-projectile-switch-project)
-  (define-key evil-normal-state-map ",b" 'ivy-switch-buffer) ; counsel-swithc-buffer preloads the buffer as you type its name, this is however not so great if loading a buffer costs starting some backgroun processes
+  (define-key evil-normal-state-map ",b" 'ivy-switch-buffer) ; counsel-switch-buffer preloads the buffer as you type its name, this is however not so great if loading a buffer costs starting some backgroun processes
+  (define-key evil-normal-state-map ",v" 'counsel-projectile-switch-to-buffer)
   (define-key evil-normal-state-map ",c" 'comment-dwim)
   (define-key evil-normal-state-map (kbd "C-l") 'delete-other-windows)
   (define-key evil-normal-state-map (kbd "gt") 'evil-goto-definition)
@@ -347,7 +354,7 @@ point."
  '(flyspell-incorrect ((t (:underline t))))
  '(help-argument-name ((t (:background "gray25"))))
  '(mouse ((t (:background "purple"))))
- '(whitespace-trailing ((t (:background "pink" :weight bold))) t))
+ '(whitespace-trailing ((t (:background "pink" :weight bold)))))
 
 
 (show-paren-mode 1)
