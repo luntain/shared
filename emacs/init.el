@@ -202,7 +202,6 @@ Frames: _f_rame new  _df_ delete
   (define-key evil-normal-state-map ",w" 'hydra-window/body)
 )
 
-
 (use-package dumb-jump :straight t
   :ensure t
   :config
@@ -306,17 +305,14 @@ Frames: _f_rame new  _df_ delete
 (remove-hook 'find-file-hook 'vc-find-file-hook)
 
 (defun indent-or-expand (arg)
-  "Either indent according to mode, or expand the word preceding
-point."
+  "Either complete or indent according to mode."
   (interactive "*P")
-  (if (and
-       (or (bobp) (= ?w (char-syntax (char-before))))
-       (or (eobp) (not (= ?w (char-syntax (char-after))))))
-      (dabbrev-expand arg)
-    (indent-according-to-mode)))
-
-(defun my-tab-fix ()
-  (local-set-key [tab] 'indent-or-expand))
+  (or (copilot-accept-completion)
+    (if (and
+        (or (bobp) (= ?w (char-syntax (char-before))))
+        (or (eobp) (not (= ?w (char-syntax (char-after))))))
+        (dabbrev-expand arg)
+      (indent-according-to-mode))))
 
 (define-key evil-insert-state-map [tab] 'indent-or-expand)
 
@@ -593,3 +589,19 @@ point."
   (ivy-rich-mode 1)
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
   )
+
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t
+  (defhydra hydra-copilot (:color red
+                            :hint nil)
+    "
+    Copilot: _c_omplete (show completion) _n_ext _p_rev _q_uit
+    "
+    ("n" copilot-next-completion)
+    ("p" copilot-previous-completion)
+    (" " copilot-accept-completion :exit t)
+    ("c" copilot-complete)
+    ("q" copilot-clear-overlay :exit t))
+  (define-key evil-insert-state-map (kbd "C-i") 'hydra-copilot/body)
+)
