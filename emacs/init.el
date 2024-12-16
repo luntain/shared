@@ -428,6 +428,8 @@ Frames: _f_rame new  _df_ delete
       (company-mode)
       (flycheck-mode)
       (modify-syntax-entry ?. ".") ; treat dot as punctuation not symbol
+      (modify-syntax-entry ?: ".") ; treat colon as punctuation not symbol
+      (modify-syntax-entry ?' "_") ; treat apostrophe as symbol
       (turn-on-purescript-indentation)))
 )
 
