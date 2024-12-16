@@ -421,7 +421,6 @@ Frames: _f_rame new  _df_ delete
 (use-package psc-ide :straight t
   :ensure t
   :config
-  (setq psc-ide-use-npm-bin t)
   (add-hook 'purescript-mode-hook
     (lambda ()
       (psc-ide-mode)
