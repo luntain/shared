@@ -62,6 +62,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-show-quick-access t nil nil "Numbers are helpful.")
  '(completion-pcm-word-delimiters "-./:| ")
  '(custom-file "~/shared/emacs/init.el")
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -73,10 +74,10 @@
       (".git" ".svn" ".hg" ".bzr" ".stack-work" ".gitmodules"))
      (files
       (".#*" "*~" "*.so" "*.jpg" "*.png" "*.gif" "*.pdf" "*.gz" "*.zip"))))
- '(haskell-mode-hook '(flycheck-mode))
- '(flycheck-disabled-checkers (quote (haskell-ghc)))
- '(grep-find-ignored-directories (quote (".git" ".stack-work")))
+ '(flycheck-disabled-checkers '(haskell-ghc))
+ '(grep-find-ignored-directories '(".git" ".stack-work"))
  '(haskell-align-imports-pad-after-name t)
+ '(haskell-mode-hook '(flycheck-mode))
  '(hyai-basic-offset 2)
  '(ido-default-buffer-method 'selected-window)
  '(ido-default-file-method 'selected-window)
@@ -86,10 +87,11 @@
  '(lsp-haskell-plugin-refine-imports-global-on nil)
  '(projectile-globally-ignored-directories
    '("^\\.idea$" "^\\.vscode$" "^\\.ensime_cache$" "^\\.eunit$" "^\\.git$" "^\\.hg$" "^\\.fslckout$" "^_FOSSIL_$" "^\\.bzr$" "^_darcs$" "^\\.pijul$" "^\\.tox$" "^\\.svn$" "^\\.stack-work$" "^\\.ccls-cache$" "^\\.cache$" "^\\.clangd$" "^\\.stack-work"))
- '(reb-re-syntax 'rx)
  '(projectile-max-file-buffer-count 200)
+ '(projectile-indexing-method 'hybrid)
+ '(projectile-use-git-grep t)
+ '(reb-re-syntax 'rx)
  '(recentf-auto-cleanup 'never)
-'(projectile-use-git-grep t)
  '(recentf-max-saved-items 500)
  '(save-place-file "~/.emacs.d/emacs-places")
  '(set-mark-command-repeat-pop t)
@@ -100,7 +102,8 @@
  '(tab-width 2)
  '(tool-bar-mode nil)
  '(uniquify-buffer-name-style 'post-forward nil (uniquify))
- '(visible-bell t))
+ '(visible-bell t)
+ '(warning-suppress-log-types '((comp))))
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq require-final-newline t)
@@ -307,12 +310,11 @@ Frames: _f_rame new  _df_ delete
 (defun indent-or-expand (arg)
   "Either complete or indent according to mode."
   (interactive "*P")
-  (or (copilot-accept-completion)
     (if (and
         (or (bobp) (= ?w (char-syntax (char-before))))
         (or (eobp) (not (= ?w (char-syntax (char-after))))))
         (dabbrev-expand arg)
-      (indent-according-to-mode))))
+      (indent-according-to-mode)))
 
 (define-key evil-insert-state-map [tab] 'indent-or-expand)
 
@@ -378,7 +380,7 @@ Frames: _f_rame new  _df_ delete
 
 (when (file-exists-p  "~/shared/emacs/pragmatapro-ligatures.el")
     (load "~/shared/emacs/pragmatapro-ligatures.el")
-    (add-to-list 'default-frame-alist '(font . "PragmataPro Mono-14")))
+    (add-to-list 'default-frame-alist '(font . "PragmataPro Mono-12")))
 
 (use-package flycheck :straight t :ensure t
   :config
@@ -415,18 +417,18 @@ Frames: _f_rame new  _df_ delete
 (setq mac-option-key-is-meta t)
 (setq mac-right-option-modifier nil)
 
-;(use-package purescript-mode :straight t :ensure t)
-;(use-package psc-ide :straight t
-;  :ensure t
-;  :config
-;  (setq psc-ide-use-npm-bin t)
-;  (add-hook 'purescript-mode-hook
-;    (lambda ()
-;      (psc-ide-mode)
-;      (company-mode)
-;      (flycheck-mode)
-;      (turn-on-purescript-indentation)))
-;)
+(use-package purescript-mode :straight t :ensure t)
+(use-package psc-ide :straight t
+  :ensure t
+  :config
+  (setq psc-ide-use-npm-bin t)
+  (add-hook 'purescript-mode-hook
+    (lambda ()
+      (psc-ide-mode)
+      (company-mode)
+      (flycheck-mode)
+      (turn-on-purescript-indentation)))
+)
 
 (use-package company :straight t
   :diminish
@@ -589,19 +591,3 @@ Frames: _f_rame new  _df_ delete
   (ivy-rich-mode 1)
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
   )
-
-(use-package copilot
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :ensure t
-  (defhydra hydra-copilot (:color red
-                            :hint nil)
-    "
-    Copilot: _c_omplete (show completion) _n_ext _p_rev _q_uit
-    "
-    ("n" copilot-next-completion)
-    ("p" copilot-previous-completion)
-    (" " copilot-accept-completion :exit t)
-    ("c" copilot-complete)
-    ("q" copilot-clear-overlay :exit t))
-  (define-key evil-insert-state-map (kbd "C-i") 'hydra-copilot/body)
-)
