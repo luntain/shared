@@ -592,3 +592,20 @@ Frames: _f_rame new  _df_ delete
   (ivy-rich-mode 1)
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
   )
+
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t
+  :config
+  (defhydra hydra-copilot (:color red
+                            :hint nil)
+    "
+    Copilot: _c_omplete (show completion) _n_ext _p_rev _q_uit
+    "
+    ("n" copilot-next-completion)
+    ("p" copilot-previous-completion)
+    (" " copilot-accept-completion :exit t)
+    ("c" copilot-complete)
+    ("q" copilot-clear-overlay :exit t))
+  (define-key evil-insert-state-map (kbd "C-i") 'hydra-copilot/body)
+)
