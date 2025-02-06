@@ -137,6 +137,8 @@
   (define-key evil-normal-state-map ",c" 'comment-dwim)
   (define-key evil-normal-state-map (kbd "C-l") 'delete-other-windows)
   (define-key evil-normal-state-map (kbd "gt") 'evil-goto-definition)
+  (define-key evil-normal-state-map (kbd "ESC") (kbd "C-g"))
+  (define-key key-translation-map (kbd "ESC") (kbd "C-g")); I'm not sure that has any effect, but the above line works
 
   (define-key evil-insert-state-map (kbd "C-l") 'evil-forward-char)
   (define-key evil-insert-state-map "\r" 'evil-normal-state)
