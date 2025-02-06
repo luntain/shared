@@ -624,3 +624,8 @@ Frames: _f_rame new  _df_ delete
     ("q" copilot-clear-overlay :exit t))
   (define-key evil-insert-state-map (kbd "C-i") 'hydra-copilot/body)
 )
+
+(defun insert-current-date ()
+  "Insert the current date in YYYY-MM-DD format."
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d")))
