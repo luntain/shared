@@ -496,18 +496,31 @@ Frames: _f_rame new  _df_ delete
   :config
   (setq company-minimum-prefix-length 1)
   (eldoc-mode -1) ;; superfluous
-)
+  (setq lsp-eldoc-render-all t)  ; Show all documentation available
+  (setq lsp-enable-diagnostics t)  ; Ensure diagnostics are enabled
+  ;; (setq lsp-ui-sideline-enable t
+  ;;       lsp-ui-sideline-show-hover t
+  ;;       lsp-ui-sideline-show-code-actions t
+  ;;       lsp-ui-sideline-update-mode 'point)
+  )
+
+(defun maybe-run-lsp ()
+  (when (string-equal (projectile-project-name) "den")
+    (lsp)))
+
 (use-package lsp-haskell :straight t
  :ensure t
  :config
  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
  (setq lsp-haskell-process-wrapper-function (lambda (argv) (append '("nice") argv)))
  (setq lsp-haskell-process-args-hie nil)
+ (setq flycheck-error-list-minimum-level 'warning)
  ;; Comment/uncomment this line to see interactions between lsp client/server.
  ;(setq lsp-log-io t)
- ;; (define-key evil-normal-state-map "gd" 'intero-goto-definition)
  (define-key evil-normal-state-map "gn" 'flycheck-next-error)
- (define-key evil-normal-state-map "gp" 'flycheck-previous-error))
+ (define-key evil-normal-state-map "gp" 'flycheck-previous-error)
+ (add-hook 'haskell-mode-hook 'maybe-run-lsp)
+)
 
 (use-package reformatter :straight t :ensure t)
 (use-package ormolu :straight t
