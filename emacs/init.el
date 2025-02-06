@@ -147,6 +147,7 @@
 
   :ensure t)
 
+; Collection of Evil bindings for the parts of Emacs that Evil does not cover properly by default
 (use-package evil-collection :straight t
   :after evil
   :ensure t
@@ -543,6 +544,7 @@ Frames: _f_rame new  _df_ delete
   :ensure t
   :bind (("C-c n" . er/expand-region)))
 
+; will be included in Emacs v30, display a window with completions for an incomplete key combination
 (use-package which-key :straight t
   :ensure t
   :config
