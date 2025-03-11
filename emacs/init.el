@@ -124,7 +124,6 @@
   ; `foo-bar` is one symbol in lisp-mode but two symbols in c-mode
   ; I am surprised that it works for move back a word or deleting a word
   :config
-  (require 'evil-surround)
   (defalias #'forward-evil-word #'forward-evil-symbol)
 
 
@@ -226,7 +225,7 @@ Frames: _f_rame new  _df_ delete
 (use-package ace-window :straight t
   :ensure t
   :config
-  (define-key evil-normal-state-map (kbd "M-o") 'ace-window)
+  ;(define-key evil-normal-state-map (kbd "M-o") 'ace-window)
   (define-key evil-normal-state-map ",a" 'ace-window)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   (setq aw-dispatch-always t)
