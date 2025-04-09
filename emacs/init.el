@@ -62,8 +62,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-show-quick-access t nil nil "Numbers are helpful.")
  '(completion-pcm-word-delimiters "-./:| ")
+ '(copilot-chat-model "gpt-4o")
  '(custom-file "~/shared/emacs/init.el")
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(electric-pair-mode t)
@@ -225,7 +225,7 @@ Frames: _f_rame new  _df_ delete
 (use-package ace-window :straight t
   :ensure t
   :config
-  ;(define-key evil-normal-state-map (kbd "M-o") 'ace-window)
+  ; (define-key evil-normal-state-map (kbd "M-o") 'ace-window) errors all of suddden
   (define-key evil-normal-state-map ",a" 'ace-window)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   (setq aw-dispatch-always t)
@@ -298,9 +298,12 @@ Frames: _f_rame new  _df_ delete
 ;                                (interactive)
 ;                                (switch-to-buffer (other-buffer))))
 
-(global-set-key (kbd "C-j") (lambda ()
-                               (interactive)
-                                (switch-to-buffer (other-buffer))))
+(defun switch-to-prev-buffer-command ()
+  (interactive)
+  (switch-to-buffer (other-buffer)))
+
+(global-set-key (kbd "C-j") 'switch-to-prev-buffer-command)
+(evil-define-key 'normal org-mode-map (kbd "C-j") 'switch-to-prev-buffer-command) ; override the override in org-mode
 
 (global-set-key (kbd "C--") 'text-scale-decrease)
 (global-set-key (kbd "C-+") 'text-scale-increase)
@@ -382,7 +385,7 @@ Frames: _f_rame new  _df_ delete
 
 (when (file-exists-p  "~/shared/emacs/pragmatapro-ligatures.el")
     (load "~/shared/emacs/pragmatapro-ligatures.el")
-    (add-to-list 'default-frame-alist '(font . "PragmataPro Mono-12")))
+    (add-to-list 'default-frame-alist '(font . "PragmataPro Mono-14")))
 
 (use-package flycheck :straight t :ensure t
   :config
@@ -593,6 +596,7 @@ Frames: _f_rame new  _df_ delete
   :config
   (define-key evil-normal-state-map (kbd "C-k") 'counsel-M-x)
   (define-key evil-insert-state-map (kbd "C-k") 'counsel-M-x)
+  (evil-define-key 'normal org-mode-map (kbd "C-k") 'counsel-M-x) ; overide the override in org-mode
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-k") 'counsel-M-x)
 )
@@ -632,3 +636,12 @@ Frames: _f_rame new  _df_ delete
   "Insert the current date in YYYY-MM-DD format."
   (interactive)
   (insert (format-time-string "%Y-%m-%d")))
+
+(straight-use-package 'gptel)
+
+(use-package shell-maker
+  :straight (:host github :repo "xenodium/shell-maker" :files ("*.el")))
+
+(use-package copilot-chat
+  :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
+  :after (request org markdown-mode shell-maker))
