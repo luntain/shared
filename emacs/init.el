@@ -640,6 +640,8 @@ Frames: _f_rame new  _df_ delete
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
   )
 
+(use-package csv-mode :straight t)
+
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :config
