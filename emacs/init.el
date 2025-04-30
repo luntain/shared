@@ -645,3 +645,5 @@ Frames: _f_rame new  _df_ delete
 (use-package copilot-chat
   :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
   :after (request org markdown-mode shell-maker))
+
+(setq org-log-done 'time) ; timestamp when marking a task done
