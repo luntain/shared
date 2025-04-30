@@ -19,7 +19,7 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(straight-use-package 'use-package)
+(straight-use-package 'use-package) ; install use-package using straight
 
 
 (setq
@@ -149,18 +149,16 @@
 ; Collection of Evil bindings for the parts of Emacs that Evil does not cover properly by default
 (use-package evil-collection :straight t
   :after evil
-  :ensure t
   :config
   (evil-collection-init))
 
 (use-package evil-surround :straight t
-  :ensure t
   :config
   (global-evil-surround-mode 1))
 
 (evil-mode 1)
 
-(use-package hydra :straight t :ensure t
+(use-package hydra :straight t
  :config
  (defhydra hydra-window (:color red
                         :hint nil)
@@ -422,7 +420,7 @@ Frames: _f_rame new  _df_ delete
 (setq mac-option-key-is-meta t)
 (setq mac-right-option-modifier nil)
 
-(use-package purescript-mode :straight t :ensure t)
+(use-package purescript-mode :straight t)
 (use-package psc-ide :straight t
   :ensure t
   :config
@@ -482,20 +480,29 @@ Frames: _f_rame new  _df_ delete
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 (setq lsp-prefer-capf t)
 
+(use-package haskell-mode
+  :straight t
+  :config)
+
 (use-package lsp-mode :straight t
-  :ensure t
-  ;:hook (haskell-mode . lsp)
+  :hook (haskell-mode . lsp)
   :commands lsp
   :init
   (setq lsp-keymap-prefix "s-l") ;; doubt if it works
   (setq lsp-use-native-json t)
   (setq lsp-print-performance nil)
   (setq lsp-log-io nil)
-  (setq lsp-diagnostics-modeline-scope :project)
+  (setq lsp-modeline-diagnostics-enable t)
+  (setq lsp-modeline-diagnostic-scope :workspace)
   (setq lsp-file-watch-threshold 5000)
+  (setq lsp-file-watch-threshold 5000)
+  ; Stan is like hlint in that it gives code suggestions, but mostly annoying. Why is that on by default?!
+  (setq lsp-haskell-plugin-stan-global-on nil)
+
+  (setq lsp-haskell-plugin-hlint-diagnostics-on nil)
+  (setq lsp-haskell-plugin-hlint-code-actions-on nil)
 )
 (use-package lsp-ui :straight t
-  :ensure t
   :commands lsp-ui-mode
   :init
   ;(setq lsp-idle-delay 1)
@@ -511,12 +518,15 @@ Frames: _f_rame new  _df_ delete
   ;;       lsp-ui-sideline-update-mode 'point)
   )
 
+(use-package lsp-treemacs
+  :straight t
+  :config)
+
 (defun maybe-run-lsp ()
   (when (string-equal (projectile-project-name) "den")
     (lsp)))
 
 (use-package lsp-haskell :straight t
- :ensure t
  :config
  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
  (setq lsp-haskell-process-wrapper-function (lambda (argv) (append '("nice") argv)))
@@ -527,11 +537,29 @@ Frames: _f_rame new  _df_ delete
  (define-key evil-normal-state-map "gn" 'flycheck-next-error)
  (define-key evil-normal-state-map "gp" 'flycheck-previous-error)
  (add-hook 'haskell-mode-hook 'maybe-run-lsp)
+
+ (lsp--set-configuration
+    '(:haskell (:plugin (:hlint (:config (:timeout_duration 5))))))
 )
+
+(defvar my/hlint-enabled nil
+  "Whether HLint diagnostics are currently enabled.")
+
+(defun my/toggle-hlint ()
+  "Toggle HLint diagnostics in LSP Haskell."
+  (interactive)
+  (setq my/hlint-enabled (not my/hlint-enabled))
+  (setq lsp-haskell-plugin-hlint-diagnostics-on my/hlint-enabled)
+  (setq lsp-haskell-plugin-hlint-code-actions-on my/hlint-enabled)
+  (lsp-restart-workspace)
+  (run-at-time
+    "1 sec" nil
+    (lambda ()
+      (message "HLint %s" (if my/hlint-enabled "enabled" "disabled")))))
+
 
 (use-package reformatter :straight t :ensure t)
 (use-package ormolu :straight t
-  :ensure t
  ; :hook (haskell-mode . ormolu-format-on-save-mode)
  :bind
  (:map haskell-mode-map
@@ -548,14 +576,12 @@ Frames: _f_rame new  _df_ delete
 
 ; will be included in Emacs v30, display a window with completions for an incomplete key combination
 (use-package which-key :straight t
-  :ensure t
   :config
   (which-key-mode)
   (which-key-setup-side-window-bottom)
   :custom (which-key-idle-delay 2))
 
 (use-package magit :straight t
-  :ensure t
   :diminish magit-auto-revert-mode
   :diminish auto-revert-mode
   :bind (("C-c g" . #'magit-status))
@@ -563,17 +589,16 @@ Frames: _f_rame new  _df_ delete
   (add-to-list 'magit-no-confirm 'stage-all-changes))
 
 (use-package yasnippet :straight t
-  :ensure t
   :defer 3 ;; takes a while to load, so do it async
   :diminish yas-minor-mode
   :config (yas-global-mode)
   :custom (yas-prompt-functions '(yas-completing-prompt)))
 
-(use-package smex :straight t :ensure t
+(use-package smex :straight t
   :init
   (setq smex-save-file "~/.emacs.d/smex-items"))
 
-(use-package ivy :straight t :ensure t
+(use-package ivy :straight t
   :init
   (setq ivy-use-virtual-buffers t)
 
@@ -592,7 +617,7 @@ Frames: _f_rame new  _df_ delete
   ;   find-library
   ;   ivy-push-view: c-c v, c-c V for pop
   )
-(use-package counsel :straight t :ensure t
+(use-package counsel :straight t
   :config
   (define-key evil-normal-state-map (kbd "C-k") 'counsel-M-x)
   (define-key evil-insert-state-map (kbd "C-k") 'counsel-M-x)
@@ -600,24 +625,25 @@ Frames: _f_rame new  _df_ delete
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-k") 'counsel-M-x)
 )
-(use-package ivy-hydra :straight t :ensure t)
+(use-package ivy-hydra :straight t)
 (ivy-mode)
 (counsel-mode)
-(use-package counsel-projectile :straight t :ensure t
+(use-package counsel-projectile :straight t
   :init
   (setq counsel-projectile-remove-current-project t)
   (setq counsel-projectile-remove-current-buffer t)
   )
 
-(use-package ivy-rich :straight t :ensure t
+(use-package ivy-rich :straight t
   :config
   (ivy-rich-mode 1)
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
   )
 
+(use-package csv-mode :straight t)
+
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :ensure t
   :config
   (defhydra hydra-copilot (:color red
                             :hint nil)
@@ -637,7 +663,7 @@ Frames: _f_rame new  _df_ delete
   (interactive)
   (insert (format-time-string "%Y-%m-%d")))
 
-(straight-use-package 'gptel)
+;(straight-use-package 'gptel)
 
 (use-package shell-maker
   :straight (:host github :repo "xenodium/shell-maker" :files ("*.el")))
