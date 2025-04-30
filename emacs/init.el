@@ -588,6 +588,7 @@ Frames: _f_rame new  _df_ delete
   :config
   (add-to-list 'magit-no-confirm 'stage-all-changes))
 
+; yasnippet is required by lsp-mode
 (use-package yasnippet :straight t
   :defer 3 ;; takes a while to load, so do it async
   :diminish yas-minor-mode
