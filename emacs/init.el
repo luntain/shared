@@ -32,9 +32,7 @@
 
 (column-number-mode)
 
-(use-package hindent :straight t
-  :init ; init - to execute before the package is loaded
-  (setq hindent-extra-args '("--line-length" "120"))
+(use-package hindent :straight t :init ; init - to execute before the package is loaded (setq hindent-extra-args '("--line-length" "120"))
   :ensure t)
 
 (use-package projectile :straight t
@@ -557,13 +555,6 @@ Frames: _f_rame new  _df_ delete
     (lambda ()
       (message "HLint %s" (if my/hlint-enabled "enabled" "disabled")))))
 
-
-(use-package reformatter :straight t :ensure t)
-(use-package ormolu :straight t
- ; :hook (haskell-mode . ormolu-format-on-save-mode)
- :bind
- (:map haskell-mode-map
-   ("C-c r" . ormolu-format-buffer)))
 
 ; no menu bar
 (menu-bar-mode -1)
