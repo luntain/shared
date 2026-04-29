@@ -34,10 +34,9 @@
 
 ; I'm not sure if that is doing anything
 (use-package hindent :straight t :init ; init - to execute before the package is loaded (setq hindent-extra-args '("--line-length" "120"))
-  :ensure t)
+  )
 
 (use-package projectile :straight t
-  :ensure t
   :config
   (setq projectile-enable-caching t)
   (put 'projectile-project-name 'safe-local-variable #'stringp)
@@ -49,7 +48,6 @@
 
 ; I don't remember what I needed it for
 (use-package exec-path-from-shell :straight t
-  :ensure t
   :config
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize))
@@ -77,7 +75,7 @@
  '(flycheck-disabled-checkers '(haskell-ghc))
  '(grep-find-ignored-directories '(".git" ".stack-work"))
  '(haskell-align-imports-pad-after-name t)
- '(haskell-mode-hook '(flycheck-mode))
+ ;'(haskell-mode-hook '(flycheck-mode))
  '(hyai-basic-offset 2)
  '(ido-default-buffer-method 'selected-window)
  '(ido-default-file-method 'selected-window)
@@ -108,10 +106,10 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq require-final-newline t)
 
-(use-package yaml-mode :straight t :ensure t)
+(use-package yaml-mode :straight t)
 
 ; Replace Emacs’ default “undo tree via linear history with branching” behavior with a straightforward linear undo/redo model.
-(use-package undo-fu :straight t :ensure t)
+(use-package undo-fu :straight t)
 
 (use-package evil :straight t
   :init
@@ -145,7 +143,7 @@
   (define-key evil-insert-state-map (kbd "C-o") 'evil-ret)
   (define-key evil-visual-state-map (kbd "i") 'lsp-extend-selection)
 
-  :ensure t)
+  )
 
 ; Collection of Evil bindings for the parts of Emacs that Evil does not cover properly by default
 (use-package evil-collection :straight t
@@ -209,7 +207,6 @@ Frames: _f_rame new  _df_ delete
 
 ; I don't use that
 (use-package dumb-jump :straight t
-  :ensure t
   :config
   (defhydra dumb-jump-hydra (:color red :columns 3)
       "Dumb Jump"
@@ -224,7 +221,6 @@ Frames: _f_rame new  _df_ delete
   )
 
 (use-package ace-window :straight t
-  :ensure t
   :config
   ; (define-key evil-normal-state-map (kbd "M-o") 'ace-window) errors all of suddden
   (define-key evil-normal-state-map ",a" 'ace-window)
@@ -233,7 +229,6 @@ Frames: _f_rame new  _df_ delete
   )
 
 (use-package smartparens :straight t
-  :ensure t
   :config
   (defhydra hydra-smartparens (:hint nil)
     "
@@ -289,26 +284,6 @@ Frames: _f_rame new  _df_ delete
    (define-key evil-normal-state-map ",s" 'hydra-smartparens/body)
 )
 
-; (setq key-chord-two-key-delay 0.05)
-;(require 'key-chord)
-;(key-chord-mode 1)
-;(key-chord-define-global "fj" 'smex)
-;(key-chord-define-global "dk" 'evil-normal-state)
-;(key-chord-define-global "df" 'delete-other-windows)
-;(key-chord-define-global "jk" (lambda ()
-;                                (interactive)
-;                                (switch-to-buffer (other-buffer))))
-
-(defun switch-to-prev-buffer-command ()
-  (interactive)
-  (switch-to-buffer (other-buffer)))
-
-(global-set-key (kbd "C-j") 'switch-to-prev-buffer-command)
-(evil-define-key 'normal org-mode-map (kbd "C-j") 'switch-to-prev-buffer-command) ; override the override in org-mode
-
-(global-set-key (kbd "C--") 'text-scale-decrease)
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C-0") 'text-scale-adjust)
 
 ; remove this hook because it slows down opening files
 (remove-hook 'find-file-hook 'vc-find-file-hook)
@@ -335,12 +310,12 @@ Frames: _f_rame new  _df_ delete
    (t (kbd "C-g"))))
 
 ; jump to a character
-(use-package ace-jump-mode :straight t :ensure t :config
+(use-package ace-jump-mode :straight t :config
   (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-word-mode)
   (define-key evil-normal-state-map (kbd "C-SPC") 'ace-jump-mode))
 
 ; another take on jumping to character
-(use-package avy :straight t :ensure t :config
+(use-package avy :straight t :config
   (define-key evil-normal-state-map (kbd "S-SPC") 'avy-goto-char-2)
  )
 
@@ -390,7 +365,7 @@ Frames: _f_rame new  _df_ delete
     (load "~/shared/emacs/pragmatapro-ligatures.el")
     (add-to-list 'default-frame-alist '(font . "PragmataPro Mono-14")))
 
-(use-package flycheck :straight t :ensure t
+(use-package flycheck :straight t
   :config
   ; so that flycheck overrides eldoc
   (setq eldoc-idle-delay 0.1
@@ -401,7 +376,7 @@ Frames: _f_rame new  _df_ delete
 ;;(require 'company-flx)
 ;;(company-flx-mode +1)
 
-(use-package flx-ido :straight t :ensure t)
+(use-package flx-ido :straight t)
 (flx-ido-mode 1)
 ;; disable ido faces to see flx highlights.
 (setq ido-enable-flex-matching t)
@@ -427,7 +402,6 @@ Frames: _f_rame new  _df_ delete
 
 (use-package purescript-mode :straight t)
 (use-package psc-ide :straight t
-  :ensure t
   :config
   ;(setq psc-ide-use-npm-bin t)
   (add-hook 'purescript-mode-hook
@@ -527,10 +501,6 @@ Frames: _f_rame new  _df_ delete
   :straight t
   :config)
 
-(defun maybe-run-lsp ()
-  (when (string-equal (projectile-project-name) "den")
-    (lsp)))
-
 (use-package lsp-haskell :straight t
  :config
  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
@@ -541,7 +511,6 @@ Frames: _f_rame new  _df_ delete
  ;(setq lsp-log-io t)
  (define-key evil-normal-state-map "gn" 'flycheck-next-error)
  (define-key evil-normal-state-map "gp" 'flycheck-previous-error)
- (add-hook 'haskell-mode-hook 'maybe-run-lsp)
 
  (lsp--set-configuration
     '(:haskell (:plugin (:hlint (:config (:timeout_duration 5))))))
@@ -569,7 +538,6 @@ Frames: _f_rame new  _df_ delete
 (toggle-scroll-bar -1)
 
 (use-package expand-region :straight t
-  :ensure t
   :bind (("C-c n" . er/expand-region)))
 
 ; will be included in Emacs v30, display a window with completions for an incomplete key combination
@@ -672,3 +640,25 @@ Frames: _f_rame new  _df_ delete
   ;:after (request org markdown-mode shell-maker))
 
 (setq org-log-done 'time) ; timestamp when marking a task done
+
+
+; (setq key-chord-two-key-delay 0.05)
+;(require 'key-chord)
+;(key-chord-mode 1)
+;(key-chord-define-global "fj" 'smex)
+;(key-chord-define-global "dk" 'evil-normal-state)
+;(key-chord-define-global "df" 'delete-other-windows)
+;(key-chord-define-global "jk" (lambda ()
+;                                (interactive)
+;                                (switch-to-buffer (other-buffer))))
+
+(defun switch-to-prev-buffer-command ()
+  (interactive)
+  (switch-to-buffer (other-buffer)))
+
+(global-set-key (kbd "C-j") 'switch-to-prev-buffer-command)
+(evil-define-key 'normal org-mode-map (kbd "C-j") 'switch-to-prev-buffer-command) ; override the override in org-mode
+
+(global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C-0") 'text-scale-adjust)
