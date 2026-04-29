@@ -32,6 +32,7 @@
 
 (column-number-mode)
 
+; I'm not sure if that is doing anything
 (use-package hindent :straight t :init ; init - to execute before the package is loaded (setq hindent-extra-args '("--line-length" "120"))
   :ensure t)
 
@@ -46,6 +47,7 @@
   )
 (projectile-mode)
 
+; I don't remember what I needed it for
 (use-package exec-path-from-shell :straight t
   :ensure t
   :config
@@ -108,6 +110,7 @@
 
 (use-package yaml-mode :straight t :ensure t)
 
+; Replace Emacs’ default “undo tree via linear history with branching” behavior with a straightforward linear undo/redo model.
 (use-package undo-fu :straight t :ensure t)
 
 (use-package evil :straight t
@@ -156,6 +159,7 @@
 
 (evil-mode 1)
 
+; I don't use hydra, perhap should drop it
 (use-package hydra :straight t
  :config
  (defhydra hydra-window (:color red
@@ -203,6 +207,7 @@ Frames: _f_rame new  _df_ delete
   (define-key evil-normal-state-map ",w" 'hydra-window/body)
 )
 
+; I don't use that
 (use-package dumb-jump :straight t
   :ensure t
   :config
@@ -329,10 +334,12 @@ Frames: _f_rame new  _df_ delete
    ;;((eq overriding-terminal-local-map evil-read-key-map) (keyboard-quit) (kbd ""))
    (t (kbd "C-g"))))
 
+; jump to a character
 (use-package ace-jump-mode :straight t :ensure t :config
   (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-word-mode)
   (define-key evil-normal-state-map (kbd "C-SPC") 'ace-jump-mode))
 
+; another take on jumping to character
 (use-package avy :straight t :ensure t :config
   (define-key evil-normal-state-map (kbd "S-SPC") 'avy-goto-char-2)
  )
@@ -657,11 +664,11 @@ Frames: _f_rame new  _df_ delete
 
 ;(straight-use-package 'gptel)
 
-(use-package shell-maker
-  :straight (:host github :repo "xenodium/shell-maker" :files ("*.el")))
+;(use-package shell-maker
+  ;:straight (:host github :repo "xenodium/shell-maker" :files ("*.el")))
 
-(use-package copilot-chat
-  :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
-  :after (request org markdown-mode shell-maker))
+;(use-package copilot-chat
+  ;:straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
+  ;:after (request org markdown-mode shell-maker))
 
 (setq org-log-done 'time) ; timestamp when marking a task done
