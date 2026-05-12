@@ -38,10 +38,12 @@
 
 (use-package projectile :straight t
   :config
-  (setq projectile-enable-caching t)
+  ;; `counsel-projectile-find-file' checks whether .projectile is newer than
+  ;; projectile's cache file before every lookup.  with session-only caching
+  ;; that file is absent, so projects with .projectile can be invalidated on
+  ;; every `,f' invocation.
+  (setq projectile-enable-caching 'persistent)
   (put 'projectile-project-name 'safe-local-variable #'stringp)
-  ; this goes with naming the project inside .dir-locals.el:
-  ; ((nil . ((projectile-project-name . "GFS"))))
   (setq projectile-completion-system 'ivy)
   )
 (projectile-mode)
