@@ -43,6 +43,10 @@
   ;; that file is absent, so projects with .projectile can be invalidated on
   ;; every `,f' invocation.
   (setq projectile-enable-caching 'persistent)
+  ;; With fd, Projectile sees files inside Git submodules from the parent
+  ;; project and then adds the same submodule files again via Git subproject
+  ;; handling.
+  (setq projectile-git-use-fd nil)
   (put 'projectile-project-name 'safe-local-variable #'stringp)
   (setq projectile-completion-system 'ivy)
   )
@@ -63,7 +67,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(completion-pcm-word-delimiters "-./:| ")
- '(copilot-chat-model "gpt-4o")
  '(custom-file "~/shared/emacs/init.el")
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(electric-pair-mode t)
@@ -611,22 +614,6 @@ Frames: _f_rame new  _df_ delete
 
 (use-package csv-mode :straight t)
 
-(use-package copilot
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :config
-  (defhydra hydra-copilot (:color red
-                            :hint nil)
-    "
-    Copilot: _c_omplete (show completion) _n_ext _p_rev _q_uit
-    "
-    ("n" copilot-next-completion)
-    ("p" copilot-previous-completion)
-    (" " copilot-accept-completion :exit t)
-    ("c" copilot-complete)
-    ("q" copilot-clear-overlay :exit t))
-  (define-key evil-insert-state-map (kbd "C-i") 'hydra-copilot/body)
-)
-
 (defun insert-current-date ()
   "Insert the current date in YYYY-MM-DD format."
   (interactive)
@@ -637,9 +624,6 @@ Frames: _f_rame new  _df_ delete
 ;(use-package shell-maker
   ;:straight (:host github :repo "xenodium/shell-maker" :files ("*.el")))
 
-;(use-package copilot-chat
-  ;:straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
-  ;:after (request org markdown-mode shell-maker))
 
 (setq org-log-done 'time) ; timestamp when marking a task done
 
